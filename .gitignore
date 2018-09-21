@@ -104,14 +104,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Analysis
-/analysis/
-
 # Data
-/data/aozora/new_pseudonym_texts/
-/data/bccwj/PB
-/data/bccwj/Literature
-/data/narou/
+/data/origin/
+/data/preprocessed/
 
 # Model
-/model/narou/
