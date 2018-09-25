@@ -2,8 +2,8 @@ import os
 import json
 from itertools import chain
 
-from src.util import paths
-from src.util.text_processor import get_wakati_lines
+from util import paths
+from util.text_processor import get_wakati_lines
 
 class DataAccessor:
 
