@@ -107,5 +107,6 @@ venv.bak/
 # Data
 /data/origin/
 /data/preprocessed/
+/data/path_line_sentences/
 
 # Model

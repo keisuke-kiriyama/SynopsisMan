@@ -3,6 +3,7 @@ import time
 
 from util import paths
 import preprocess as p
+from embedding.word_embedding import create_path_line_sentences_files
 
 @click.group()
 def cmd():
@@ -26,7 +27,18 @@ def preprocess():
     p.meta.execute()
 
     elapsed_time = time.time() - start
-    print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+    print("elapsed_time:{:3f}".format(elapsed_time) + "[sec]")
+
+@cmd.command()
+@click.option('--refresh', '-r', default=False)
+def train_word_embedding_model(refresh):
+    start = time.time()
+    if refresh:
+        create_path_line_sentences_files()
+
+    elapsed_time = time.time() - start
+    print("elapsed_time:{:3f}".format(elapsed_time) + "[sec]")
+
 
 def main():
     cmd()

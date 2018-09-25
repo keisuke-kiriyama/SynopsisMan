@@ -13,12 +13,16 @@ class DataAccessor:
         self.meta_data_dir_path = paths.PREPROCESSED_META_DATA_DIR_PATH
         self.contents_file_paths = [os.path.join(self.contents_data_dir_path, file_name) for file_name in os.listdir(self.contents_data_dir_path) if not file_name == '.DS_Store']
         self.meta_file_paths = [os.path.join(self.meta_data_dir_path, file_name) for file_name in os.listdir(self.meta_data_dir_path) if not file_name == '.DS_Store']
+        self.ncodes = [self.ncode_from_file_path(file_path) for file_path in self.contents_file_paths]
 
     def ncode_from_file_path(self, file_path):
         """
         ファイルpathからncodeを返却する
         """
-        return file_path.split('/')[-1].split('.')[0]
+        file_name = file_path.split('/')[-1].split('.')[0]
+        if '_meta' in file_name:
+            file_name = file_name.replace('_meta', '')
+        return file_name
 
     def create_contents_file_path(self, ncode):
         """
