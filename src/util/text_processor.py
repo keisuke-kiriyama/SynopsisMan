@@ -15,6 +15,11 @@ def cleaning(line):
     line = line.replace(' ', '')
     return line
 
+def convert_serif_marker(contents):
+    contents = contents.replace('『', '「')
+    contents = contents.replace('』', '」')
+    return contents
+
 def get_wakati_lines(lines):
     """
     文のリストを、分かち書きが行われた文のリストに変換
