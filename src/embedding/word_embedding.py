@@ -1,13 +1,22 @@
-import joblib
 import os
 import MeCab
+import logging
+from gensim.models import word2vec
+from gensim.models.word2vec import PathLineSentences
 
 from util.data_accessor import DataAccessor
-from util.paths import PATH_LINE_SENTENCES_DIR_PATH
+from util.paths import PATH_LINE_SENTENCES_DIR_PATH, WORD_EMBEDDING_MODEL_PATH
 
 data_accessor = DataAccessor()
 
 output_dir_path = PATH_LINE_SENTENCES_DIR_PATH
+embedding_model_path = WORD_EMBEDDING_MODEL_PATH
+
+# PROPERTY
+embedding_size = 200
+embedding_window = 15
+embedding_min_count = 0
+embedding_sg = 0
 
 def create_path_line_sentences_files():
     """
@@ -27,5 +36,15 @@ def create_path_line_sentences_files():
         with open(output_file_path, 'w') as f:
             f.write(line_sentences)
 
-
-
+def train_word_embedding_model():
+    """
+    WordEmbeddingModelを学習する
+    """
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    sentences = PathLineSentences(PATH_LINE_SENTENCES_DIR_PATH)
+    model = word2vec.Word2Vec(sentences,
+                              size=embedding_size,
+                              window=embedding_window,
+                              min_count=embedding_min_count,
+                              sg=embedding_sg)
+    model.save(embedding_model_path)

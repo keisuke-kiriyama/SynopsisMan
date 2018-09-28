@@ -13,6 +13,7 @@ PREPROCESSED_CONTENTS_DATA_DIR_PATH = path.abspath(path.join(PREPROCESSED_DATA_D
 PREPROCESSED_META_DATA_DIR_PATH = path.abspath(path.join(PREPROCESSED_DATA_DIR_PATH, 'meta'))
 PATH_LINE_SENTENCES_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'path_line_sentences'))
 MODEL_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'model'))
+WORD_EMBEDDING_MODEL_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'word_embedding', 'word_embedding.model'))
 
 def check():
     print("FILE_PATH: ", FILE_PATH)
@@ -28,5 +29,6 @@ def check():
     print("PREPROCESSED_META_DATA_DIR_PATH: ", PREPROCESSED_META_DATA_DIR_PATH)
     print("PATH_LINE_SENTENCES_DIR_PATH: ", PATH_LINE_SENTENCES_DIR_PATH)
     print("MODEL_DIR_PATH: ", MODEL_DIR_PATH)
+    print("WORD_EMBEDDING_MODEL_PATH: ", WORD_EMBEDDING_MODEL_PATH)
 
 

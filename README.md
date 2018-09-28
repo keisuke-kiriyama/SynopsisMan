@@ -38,11 +38,12 @@ python main.py preprocess
 ## training word embedding model
 - You can train the word embedding model with the following command.
 ```
-python main.py train_word_embedding_model
+python main.py word_embedding
 ```
 
 - If you need to refresh pathLineSentences files, execute following command.
 ```
-python main.py train_word_embedding_model --refresh True
+python main.py word_embedding --refresh
 ```
+- then trained word embedding model will be saved in `/model/word_embedding/word_embedding.model`
 
