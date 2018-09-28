@@ -47,3 +47,8 @@ python main.py word_embedding --refresh
 ```
 - then trained word embedding model will be saved in `/model/word_embedding/word_embedding.model`
 
+- If you want to test word embedding model, then execute following command.
+```
+python main.py test_word_embedding -w 部屋
+```
+

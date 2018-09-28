@@ -110,3 +110,4 @@ venv.bak/
 /data/path_line_sentences/
 
 # Model
+/model/

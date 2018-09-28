@@ -48,3 +48,12 @@ def train_word_embedding_model():
                               min_count=embedding_min_count,
                               sg=embedding_sg)
     model.save(embedding_model_path)
+
+def test_word_embedding_model(test_word):
+    """
+    WordEmbeddingModelのテスト
+    """
+    model = word2vec.Word2Vec.load(embedding_model_path)
+    results = model.wv.most_similar(positive=[test_word])
+    for result in results:
+        print(result)
