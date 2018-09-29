@@ -4,6 +4,7 @@ import time
 from util import paths
 import preprocess as p
 from embedding.word_embedding import create_path_line_sentences_files, train_word_embedding_model, test_word_embedding_model
+from data_construction import word_embedding_avg_vector
 
 @click.group()
 def cmd():
@@ -48,6 +49,18 @@ def word_embedding(refresh):
 @click.option('--word', '-w')
 def test_word_embedding(word):
     test_word_embedding_model(word)
+
+@cmd.command()
+def construct_word_embedding_avg_vector():
+    """
+    文中の単語の分散表現ベクトルの平均ベクトルのデータを構築する
+    """
+    start = time.time()
+
+    word_embedding_avg_vector.construct()
+
+    elapsed_time = time.time() - start
+    print("elapsed_time:{:3f}".format(elapsed_time) + "[sec]")
 
 
 def main():

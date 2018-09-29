@@ -5,7 +5,7 @@ from itertools import chain
 from util import paths
 from util.text_processor import get_wakati_lines
 
-class DataAccessor:
+class CorpusAccessor:
 
     def __init__(self):
         # PATHS

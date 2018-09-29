@@ -14,8 +14,8 @@ python main.py check_path
 
 ## data preprocess
 - Convert raw text into sentence-divided data (considering serifs too).
-- Store scraped data in data/origin and execute this function.
-- Then preprocessed data will store in data/preprocessed.
+- Store scraped data in `data/origin` and execute this function.
+- Then preprocessed data will store in `data/preprocessed`.
 ```
 python main.py preprocess
 ```
@@ -52,3 +52,9 @@ python main.py word_embedding --refresh
 python main.py test_word_embedding -w 部屋
 ```
 
+## training data construction
+### average of word embedding vectors
+- execute following command, then average of word embedding vectors data is constructed.
+```
+python main.py construct_word_embedding_avg_vector
+```

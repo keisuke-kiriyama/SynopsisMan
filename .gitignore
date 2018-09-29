@@ -105,9 +105,8 @@ venv.bak/
 .mypy_cache/
 
 # Data
-/data/origin/
-/data/preprocessed/
-/data/path_line_sentences/
+/data/
+
 
 # Model
 /model/

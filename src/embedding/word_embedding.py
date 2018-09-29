@@ -4,10 +4,10 @@ import logging
 from gensim.models import word2vec
 from gensim.models.word2vec import PathLineSentences
 
-from util.data_accessor import DataAccessor
+from util.corpus_accessor import CorpusAccessor
 from util.paths import PATH_LINE_SENTENCES_DIR_PATH, WORD_EMBEDDING_MODEL_PATH
 
-data_accessor = DataAccessor()
+data_accessor = CorpusAccessor()
 
 output_dir_path = PATH_LINE_SENTENCES_DIR_PATH
 embedding_model_path = WORD_EMBEDDING_MODEL_PATH
@@ -26,8 +26,8 @@ def create_path_line_sentences_files():
     """
     tagger = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd -Owakati')
     for i, ncode in enumerate(data_accessor.ncodes):
-        if i % 50 == 0:
-            print('progress: {:.1f}%, processing: {}'.format(i / len(data_accessor.ncodes) * 100, ncode))
+        if i % 30 == 0:
+            print('progress: {:.1f}%'.format(i / len(data_accessor.ncodes) * 100))
         contents_liens = data_accessor.get_contents_lines(ncode)
         synopsis_lines = data_accessor.get_synopsis_lines(ncode)
         lines = contents_liens + synopsis_lines
@@ -35,6 +35,7 @@ def create_path_line_sentences_files():
         output_file_path = os.path.join(output_dir_path, ncode + '.txt')
         with open(output_file_path, 'w') as f:
             f.write(line_sentences)
+
 
 def train_word_embedding_model():
     """

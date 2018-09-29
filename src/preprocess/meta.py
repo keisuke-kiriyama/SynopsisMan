@@ -1,7 +1,7 @@
 import os
 import json
 
-from util.data_accessor import DataAccessor
+from util.corpus_accessor import CorpusAccessor
 from util import paths
 from util.text_processor import cleaning, convert_serif_marker
 from preprocess.contents import splited_sentences
@@ -11,7 +11,7 @@ meta_origin_file_paths = [os.path.join(paths.ORIGIN_META_DATA_DIR_PATH, file_nam
                           if not file_name == '.DS_Store']
 
 # Data Accessor
-accessor = DataAccessor()
+accessor = CorpusAccessor()
 
 def remove_publicity_sentences(sentences):
     """

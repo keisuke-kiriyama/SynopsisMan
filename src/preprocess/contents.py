@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-from util.data_accessor import DataAccessor
+from util.corpus_accessor import CorpusAccessor
 from util import paths
 from util.text_processor import cleaning, convert_serif_marker
 
@@ -11,7 +11,7 @@ contents_origin_file_paths = [os.path.join(paths.ORIGIN_CONTENTS_DATA_DIR_PATH, 
                               if not file_name == '.DS_Store']
 
 # Data Accessor
-accessor = DataAccessor()
+accessor = CorpusAccessor()
 
 def preprocess_seq_serifs(seq_serif):
     """
