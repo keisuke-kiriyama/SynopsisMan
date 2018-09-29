@@ -4,7 +4,7 @@ import time
 from util import paths
 import preprocess as p
 from embedding.word_embedding import create_path_line_sentences_files, train_word_embedding_model, test_word_embedding_model
-from data_construction import word_embedding_avg_vector
+from data_construction import word_embedding_avg_vector, similarity_between_contents_and_synopsis_sentence
 
 @click.group()
 def cmd():
@@ -22,13 +22,8 @@ def preprocess():
     """
     スクレイピングしたデータを正しく文分割したデータに変換する
     """
-    start = time.time()
-
     p.contents.execute()
     p.meta.execute()
-
-    elapsed_time = time.time() - start
-    print("elapsed_time:{:3f}".format(elapsed_time) + "[sec]")
 
 @cmd.command()
 @click.option('--refresh', is_flag=True)
@@ -36,14 +31,10 @@ def word_embedding(refresh):
     """
     Word Embedding Modelの学習
     """
-    start = time.time()
     if refresh:
         create_path_line_sentences_files()
 
     train_word_embedding_model()
-
-    elapsed_time = time.time() - start
-    print("elapsed_time:{:3f}".format(elapsed_time) + "[sec]")
 
 @cmd.command()
 @click.option('--word', '-w')
@@ -55,16 +46,22 @@ def construct_word_embedding_avg_vector():
     """
     文中の単語の分散表現ベクトルの平均ベクトルのデータを構築する
     """
-    start = time.time()
-
     word_embedding_avg_vector.construct()
+
+@cmd.command()
+def construct_similarity_data():
+    """
+    本文中の各文とあらすじ文各文の類似度のデータを構築する
+    """
+    similarity_between_contents_and_synopsis_sentence.construct()
+
+def main():
+
+    start = time.time()
+    cmd()
 
     elapsed_time = time.time() - start
     print("elapsed_time:{:3f}".format(elapsed_time) + "[sec]")
-
-
-def main():
-    cmd()
 
 if __name__ == '__main__':
     main()

@@ -7,7 +7,7 @@ pip install -r requirements.txt
 ```
 
 ## Check setting path
-- execute when you want to confirm the setting path.
+- Execute when you want to confirm the setting path.
 ```
 python main.py check_path
 ```
@@ -45,7 +45,7 @@ python main.py word_embedding
 ```
 python main.py word_embedding --refresh
 ```
-- then trained word embedding model will be saved in `/model/word_embedding/word_embedding.model`
+- Then trained word embedding model will be saved in `/model/word_embedding/word_embedding.model`
 
 - If you want to test word embedding model, then execute following command.
 ```
@@ -54,7 +54,13 @@ python main.py test_word_embedding -w 部屋
 
 ## Training data construction
 ### Average of word embedding vectors
-- execute following command, then average of word embedding vectors data is constructed.
+- Execute following command, then average of word embedding vectors data is constructed.
 ```
 python main.py construct_word_embedding_avg_vector
+```
+
+### Similarity between contents and synopsis
+- Execute following command, then data on the similarity between the contents and the synopsis is constructed
+```
+python main.py def construct_similarity_data():
 ```
