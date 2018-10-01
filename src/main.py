@@ -4,9 +4,7 @@ import time
 from util import paths
 import preprocess as p
 from embedding.word_embedding import create_path_line_sentences_files, train_word_embedding_model, test_word_embedding_model
-from data_construction import word_embedding_avg_vector
-from data_construction import similarity_between_contents_and_synopsis_sentence
-from data_construction import position_of_sentence
+import data_construction
 
 @click.group()
 def cmd():
@@ -48,21 +46,29 @@ def construct_word_embedding_avg_vector():
     """
     文中の単語の分散表現ベクトルの平均ベクトルのデータを構築する
     """
-    word_embedding_avg_vector.construct()
+    data_construction.word_embedding_avg_vector.construct()
 
 @cmd.command()
 def construct_similarity_data():
     """
     本文中の各文とあらすじ文各文の類似度のデータを構築する
     """
-    similarity_between_contents_and_synopsis_sentence.construct()
+    data_construction.similarity_between_contents_and_synopsis_sentence.construct()
 
 @cmd.command()
 def construct_position_of_sentence_data():
     """
     本文各文の出現位置のデータを構築する
     """
-    position_of_sentence.construct()
+    data_construction.position_of_sentence.construct()
+
+@cmd.command()
+def construct_is_serif_data():
+    """
+    本文各文がセリフか否かのデータを構築する
+    :return:
+    """
+    data_construction.is_serif.construct()
 
 
 def main():

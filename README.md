@@ -70,3 +70,10 @@ python main.py construct_similarity_data:
 ```
 python main.py construct_position_of_sentence_data
 ```
+
+### Is Serif?
+- Execute following command, then data which Data indicating whether each sentence is serif is constructed.
+```
+python main.py construct_is_serif_data
+```
+
