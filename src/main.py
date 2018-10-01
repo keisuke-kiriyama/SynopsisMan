@@ -4,7 +4,9 @@ import time
 from util import paths
 import preprocess as p
 from embedding.word_embedding import create_path_line_sentences_files, train_word_embedding_model, test_word_embedding_model
-from data_construction import word_embedding_avg_vector, similarity_between_contents_and_synopsis_sentence
+from data_construction import word_embedding_avg_vector
+from data_construction import similarity_between_contents_and_synopsis_sentence
+from data_construction import position_of_sentence
 
 @click.group()
 def cmd():
@@ -54,6 +56,14 @@ def construct_similarity_data():
     本文中の各文とあらすじ文各文の類似度のデータを構築する
     """
     similarity_between_contents_and_synopsis_sentence.construct()
+
+@cmd.command()
+def construct_position_of_sentence_data():
+    """
+    本文各文の出現位置のデータを構築する
+    """
+    position_of_sentence.construct()
+
 
 def main():
 

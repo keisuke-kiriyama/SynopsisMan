@@ -5,18 +5,27 @@ UTIL_PATH = path.dirname(FILE_PATH)
 SRC_DIR_PATH = path.abspath(path.join(UTIL_PATH, pardir))
 PROJECT_ROOT = path.abspath(path.join(SRC_DIR_PATH, pardir))
 DATA_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'data'))
+MODEL_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'model'))
+
 ORIGIN_DATA_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'origin'))
 ORIGIN_CONTENTS_DATA_DIR_PATH = path.abspath(path.join(ORIGIN_DATA_DIR_PATH, 'contents'))
 ORIGIN_META_DATA_DIR_PATH = path.abspath(path.join(ORIGIN_DATA_DIR_PATH, 'meta'))
+
 PREPROCESSED_DATA_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'preprocessed'))
 PREPROCESSED_CONTENTS_DATA_DIR_PATH = path.abspath(path.join(PREPROCESSED_DATA_DIR_PATH, 'contents'))
 PREPROCESSED_META_DATA_DIR_PATH = path.abspath(path.join(PREPROCESSED_DATA_DIR_PATH, 'meta'))
+
 PATH_LINE_SENTENCES_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'path_line_sentences'))
+
 WORD_EMBEDDING_AVG_VECTOR_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'word_embedding_avg_vector'))
 WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH = path.abspath(path.join(WORD_EMBEDDING_AVG_VECTOR_DIR_PATH, 'contents'))
 WORD_EMBEDDING_AVG_VECTOR_META_PATH = path.abspath(path.join(WORD_EMBEDDING_AVG_VECTOR_DIR_PATH, 'meta'))
+
 SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'similarity_between_contents_and_synopsis_sentence'))
-MODEL_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'model'))
+
+POSITION_OF_SENTENCE_DATA_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'position_of_sentence'))
+POSITION_OF_SENTENCE_CONTENTS_DIR_PATH = path.abspath(path.join(POSITION_OF_SENTENCE_DATA_DIR_PATH, 'contents'))
+
 WORD_EMBEDDING_MODEL_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'word_embedding', 'word_embedding.model'))
 
 def check():
@@ -36,6 +45,8 @@ def check():
     print("WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH: ", WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH)
     print("WORD_EMBEDDING_AVG_VECTOR_META_PATH: ", WORD_EMBEDDING_AVG_VECTOR_META_PATH)
     print("SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH: ", SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)
+    print("POSITION_OF_SENTENCE_DATA_DIR_PATH: ", POSITION_OF_SENTENCE_DATA_DIR_PATH)
+    print("POSITION_OF_SENTENCE_CONTENTS_DIR_PATH: ", POSITION_OF_SENTENCE_CONTENTS_DIR_PATH)
     print("MODEL_DIR_PATH: ", MODEL_DIR_PATH)
     print("WORD_EMBEDDING_MODEL_PATH: ", WORD_EMBEDDING_MODEL_PATH)
 

@@ -62,5 +62,11 @@ python main.py construct_word_embedding_avg_vector
 ### Similarity between contents and synopsis
 - Execute following command, then data on the similarity between the contents and the synopsis is constructed
 ```
-python main.py def construct_similarity_data():
+python main.py construct_similarity_data:
+```
+
+### Position of sentence
+- Execute following command, then data of position of sentence is constructed.
+```
+python main.py construct_position_of_sentence_data
 ```
