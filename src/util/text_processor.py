@@ -15,6 +15,13 @@ def cleaning(line):
     line = line.replace(' ', '')
     return line
 
+def tagger():
+    return MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
+
+def wakati_tagger():
+    return MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd -Owakati')
+
+
 def convert_serif_marker(contents):
     contents = contents.replace('『', '「')
     contents = contents.replace('』', '」')

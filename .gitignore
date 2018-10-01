@@ -115,6 +115,7 @@ venv.bak/
 /data/similarity_between_contents_and_synopsis_sentence/*
 /data/word_embedding_avg_vector/contents/*
 /data/word_embedding_avg_vector/meta/*
+/data/is_include_person/contents/*
 
 
 # Model

@@ -6,6 +6,7 @@ from gensim.models.word2vec import PathLineSentences
 
 from util.corpus_accessor import CorpusAccessor
 from util.paths import PATH_LINE_SENTENCES_DIR_PATH, WORD_EMBEDDING_MODEL_PATH
+from util.text_processor import wakati_tagger
 
 data_accessor = CorpusAccessor()
 
@@ -24,7 +25,7 @@ def create_path_line_sentences_files():
     one sentence = one line, with words already preprocessed and separated by whitespace.
     作成されたファイルはdata/path_line_sentences下に保存される
     """
-    tagger = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd -Owakati')
+    tagger = wakati_tagger()
     for i, ncode in enumerate(data_accessor.ncodes):
         if i % 30 == 0:
             print('progress: {:.1f}%'.format(i / len(data_accessor.ncodes) * 100))

@@ -66,9 +66,15 @@ def construct_position_of_sentence_data():
 def construct_is_serif_data():
     """
     本文各文がセリフか否かのデータを構築する
-    :return:
     """
     data_construction.is_serif.construct()
+
+@cmd.command()
+def construct_is_include_person_data():
+    """
+    本文各文に人名が含まれるか否かのデータを構築する
+    """
+    data_construction.is_include_person.construct()
 
 
 def main():

@@ -29,6 +29,9 @@ POSITION_OF_SENTENCE_CONTENTS_DIR_PATH = path.abspath(path.join(POSITION_OF_SENT
 IS_SERIF_DATA_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'is_serif'))
 IS_SERIF_CONTENTS_DIR_PATH = path.abspath(path.join(IS_SERIF_DATA_DIR_PATH, 'contents'))
 
+IS_INCLUDE_PERSON_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'is_include_person'))
+IS_INCLUDE_PERSON_CONTENTS_PATH = path.abspath(path.join(IS_INCLUDE_PERSON_DIR_PATH, 'contents'))
+
 WORD_EMBEDDING_MODEL_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'word_embedding', 'word_embedding.model'))
 
 def check():
@@ -52,6 +55,8 @@ def check():
     print("POSITION_OF_SENTENCE_CONTENTS_DIR_PATH: ", POSITION_OF_SENTENCE_CONTENTS_DIR_PATH)
     print("IS_SERIF_DATA_DIR_PATH: ", IS_SERIF_DATA_DIR_PATH)
     print("IS_SERIF_CONTENTS_DIR_PATH:f ", IS_SERIF_CONTENTS_DIR_PATH)
+    print("IS_INCLUDE_PERSON_DIR_PATH: ", IS_INCLUDE_PERSON_DIR_PATH)
+    print("IS_INCLUDE_PERSON_CONTENTS_PATH: ", IS_INCLUDE_PERSON_CONTENTS_PATH)
     print("MODEL_DIR_PATH: ", MODEL_DIR_PATH)
     print("WORD_EMBEDDING_MODEL_PATH: ", WORD_EMBEDDING_MODEL_PATH)
 

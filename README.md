@@ -77,3 +77,8 @@ python main.py construct_position_of_sentence_data
 python main.py construct_is_serif_data
 ```
 
+### Is include person name?
+- Execute following command, then data representing whether or not a person's name is included is constructed
+```
+python main.py construct_is_include_person_data
+```
