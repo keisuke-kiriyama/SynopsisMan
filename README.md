@@ -82,3 +82,9 @@ python main.py construct_is_serif_data
 ```
 python main.py construct_is_include_person_data
 ```
+
+### Sentence length
+- Execute following command, then entence length data is constructed.
+```
+python main.py construct_sentence_length_data
+```

@@ -116,6 +116,7 @@ venv.bak/
 /data/word_embedding_avg_vector/contents/*
 /data/word_embedding_avg_vector/meta/*
 /data/is_include_person/contents/*
+/data/sentence_length/contents/*
 
 
 # Model

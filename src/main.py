@@ -76,6 +76,13 @@ def construct_is_include_person_data():
     """
     data_construction.is_include_person.construct()
 
+@cmd.command()
+def construct_sentence_length_data():
+    """
+    本文各文の文長データの構築
+    """
+    data_construction.sentence_length.construct()
+
 
 def main():
 
