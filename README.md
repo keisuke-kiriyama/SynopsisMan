@@ -13,6 +13,10 @@ python main.py check_path
 ```
 
 ## Data preprocess
+- First, you need to execute following command.
+```
+python main.py data_mkdir
+```
 - Convert raw text into sentence-divided data (considering serifs too).
 - Store scraped data in `data/origin` and execute this function.
 - Then preprocessed data will store in `data/preprocessed`.
