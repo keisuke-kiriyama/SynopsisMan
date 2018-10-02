@@ -18,6 +18,13 @@ def check_paths():
     paths.check()
 
 @cmd.command()
+def data_mkdir():
+    """
+    データ用のディレクトリを一斉作成
+    """
+    paths.mkdir()
+
+@cmd.command()
 def preprocess():
     """
     スクレイピングしたデータを正しく文分割したデータに変換する
@@ -95,4 +102,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-    

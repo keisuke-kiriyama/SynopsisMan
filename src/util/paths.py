@@ -1,4 +1,4 @@
-from os import path, pardir
+from os import path, pardir, mkdir
 
 FILE_PATH = path.abspath(__file__)
 UTIL_PATH = path.dirname(FILE_PATH)
@@ -70,4 +70,46 @@ def check():
     print("MODEL_DIR_PATH: ", MODEL_DIR_PATH)
     print("WORD_EMBEDDING_MODEL_PATH: ", WORD_EMBEDDING_MODEL_PATH)
 
-
+def mkdir():
+    if not path.isdir(ORIGIN_DATA_DIR_PATH):
+        mkdir(ORIGIN_DATA_DIR_PATH)
+    if not path.isdir(ORIGIN_CONTENTS_DATA_DIR_PATH):
+        mkdir(ORIGIN_CONTENTS_DATA_DIR_PATH)
+    if not path.isdir(ORIGIN_META_DATA_DIR_PATH):
+        mkdir(ORIGIN_META_DATA_DIR_PATH)
+    if not path.isdir(PREPROCESSED_DATA_DIR_PATH):
+        mkdir(PREPROCESSED_DATA_DIR_PATH)
+    if not path.isdir(PREPROCESSED_CONTENTS_DATA_DIR_PATH):
+        mkdir(PREPROCESSED_CONTENTS_DATA_DIR_PATH)
+    if not path.isdir(PREPROCESSED_META_DATA_DIR_PATH):
+        mkdir(PREPROCESSED_META_DATA_DIR_PATH)
+    if not path.isdir(PATH_LINE_SENTENCES_DIR_PATH):
+        mkdir(PATH_LINE_SENTENCES_DIR_PATH)
+    if not path.isdir(WORD_EMBEDDING_AVG_VECTOR_DIR_PATH):
+        mkdir(WORD_EMBEDDING_AVG_VECTOR_DIR_PATH)
+    if not path.isdir(WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH):
+        mkdir(WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH)
+    if not path.isdir(WORD_EMBEDDING_AVG_VECTOR_META_PATH):
+        mkdir(WORD_EMBEDDING_AVG_VECTOR_META_PATH)
+    if not path.isdir(SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH):
+        mkdir(SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)
+    if not path.isdir(POSITION_OF_SENTENCE_DATA_DIR_PATH):
+        mkdir(POSITION_OF_SENTENCE_DATA_DIR_PATH)
+    if not path.isdir(POSITION_OF_SENTENCE_CONTENTS_DIR_PATH):
+        mkdir(POSITION_OF_SENTENCE_CONTENTS_DIR_PATH)
+    if not path.isdir(IS_SERIF_DATA_DIR_PATH):
+        mkdir(IS_SERIF_DATA_DIR_PATH)
+    if not path.isdir(IS_SERIF_CONTENTS_DIR_PATH):
+        mkdir(IS_SERIF_CONTENTS_DIR_PATH)
+    if not path.isdir(IS_INCLUDE_PERSON_DIR_PATH):
+        mkdir(IS_INCLUDE_PERSON_DIR_PATH)
+    if not path.isdir(IS_INCLUDE_PERSON_CONTENTS_PATH):
+        mkdir(IS_INCLUDE_PERSON_CONTENTS_PATH)
+    if not path.isdir(SENTENCE_LENGTH_DIR_PATH):
+        mkdir(SENTENCE_LENGTH_DIR_PATH)
+    if not path.isdir(SENTENCE_LENGTH_CONTENTS_PATH):
+        mkdir(SENTENCE_LENGTH_CONTENTS_PATH)
+    if not path.isdir(OPT_SENTENCES_DIR_PATH):
+        mkdir(OPT_SENTENCES_DIR_PATH)
+    if not path.isdir(OPT_SENTENCES_CONTENTS_DIR_PATH):
+        mkdir(OPT_SENTENCES_CONTENTS_DIR_PATH)
