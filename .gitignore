@@ -105,19 +105,7 @@ venv.bak/
 .mypy_cache/
 
 # Data
-/data/is_serif/contents/*
-/data/origin/contents/*
-/data/origin/meta/*
-/data/path_line_sentences/*
-/data/position_of_sentence/contents/*
-/data/preprocessed/contents/*
-/data/preprocessed/meta/*
-/data/similarity_between_contents_and_synopsis_sentence/*
-/data/word_embedding_avg_vector/contents/*
-/data/word_embedding_avg_vector/meta/*
-/data/is_include_person/contents/*
-/data/sentence_length/contents/*
-
+/data/
 
 # Model
 /model/
