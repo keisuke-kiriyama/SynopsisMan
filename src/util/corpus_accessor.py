@@ -11,6 +11,7 @@ class CorpusAccessor:
         # PATHS
         self.contents_data_dir_path = paths.PREPROCESSED_CONTENTS_DATA_DIR_PATH
         self.meta_data_dir_path = paths.PREPROCESSED_META_DATA_DIR_PATH
+        if not os.path.isdir(self.contents_data_dir_path) or not os.path.isdir(self.meta_data_dir_path): return
         self.contents_file_paths = [os.path.join(self.contents_data_dir_path, file_name) for file_name in os.listdir(self.contents_data_dir_path) if not file_name == '.DS_Store']
         self.meta_file_paths = [os.path.join(self.meta_data_dir_path, file_name) for file_name in os.listdir(self.meta_data_dir_path) if not file_name == '.DS_Store']
         self.ncodes = [self.ncode_from_file_path(file_path) for file_path in self.contents_file_paths]
