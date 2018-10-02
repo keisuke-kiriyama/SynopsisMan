@@ -10,7 +10,8 @@ from util.paths import WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH, WORD_EMBEDDING_A
 data_accessor = CorpusAccessor()
 
 print('[INFO] loading word embedding model...')
-word_embedding_model = word2vec.Word2Vec.load(WORD_EMBEDDING_MODEL_PATH)
+if os.path.isfile(WORD_EMBEDDING_MODEL_PATH):
+    word_embedding_model = word2vec.Word2Vec.load(WORD_EMBEDDING_MODEL_PATH)
 
 def convert_avg_vector(line):
     """
