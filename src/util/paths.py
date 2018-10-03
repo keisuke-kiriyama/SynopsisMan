@@ -39,7 +39,8 @@ SENTENCE_LENGTH_CONTENTS_PATH = path.abspath(path.join(SENTENCE_LENGTH_DIR_PATH,
 OPT_SENTENCES_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'opt_sentences'))
 OPT_SENTENCES_CONTENTS_DIR_PATH = path.abspath(path.join(OPT_SENTENCES_DIR_PATH, 'contents'))
 
-WORD_EMBEDDING_MODEL_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'word_embedding', 'word_embedding.model'))
+WORD_EMBEDDING_MODEL_DIR_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'word_embedding'))
+WORD_EMBEDDING_MODEL_PATH = path.abspath(path.join(WORD_EMBEDDING_MODEL_DIR_PATH, 'word_embedding.model'))
 
 def check():
     print("FILE_PATH: ", FILE_PATH)
@@ -114,3 +115,7 @@ def mkdir():
         os.mkdir(OPT_SENTENCES_DIR_PATH)
     if not path.isdir(OPT_SENTENCES_CONTENTS_DIR_PATH):
         os.mkdir(OPT_SENTENCES_CONTENTS_DIR_PATH)
+    if not path.isdir(MODEL_DIR_PATH):
+        os.mkdir(MODEL_DIR_PATH)
+    if not WORD_EMBEDDING_MODEL_DIR_PATH:
+        os.mkdir(WORD_EMBEDDING_MODEL_DIR_PATH)
