@@ -14,9 +14,11 @@ def construct_position_of_sentence_data(ncode):
     [1: 類似度, 2: 類似度, ... , n: 類似度]
     """
     print('[PROCESS NCODE]: {}'.format(ncode))
-    contents_len = len(corpus_accessor.get_contents_lines(ncode))
-    if contents_len == 0:
+    contents_lines = corpus_accessor.get_contents_lines(ncode)
+    synopsis_lines = corpus_accessor.get_synopsis_lines(ncode)
+    if not contents_lines or not synopsis_lines:
         return
+    contents_len = len(corpus_accessor.get_contents_lines(ncode))
     position_data = np.arange(0, 1, 1 / contents_len, dtype=float)
     position_dict = {idx: position for idx, position in enumerate(position_data)}
 

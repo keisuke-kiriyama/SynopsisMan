@@ -14,7 +14,8 @@ def construct_sentence_length_data(ncode):
     """
     print('[PROCESS NCODE]: {}'.format(ncode))
     contents_lines = corpus_accessor.get_contents_lines(ncode)
-    if not contents_lines:
+    synopsis_lines = corpus_accessor.get_synopsis_lines(ncode)
+    if not contents_lines or not synopsis_lines:
         return
     raw_length_data = [len(line) for line in contents_lines]
     max_len = max(raw_length_data)

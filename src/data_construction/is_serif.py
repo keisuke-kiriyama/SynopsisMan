@@ -14,6 +14,9 @@ def construct_is_serif_data(ncode):
     """
     print('[PROCESS NCODE]: {}'.format(ncode))
     contents_lines = corpus_accessor.get_contents_lines(ncode)
+    synopsis_lines = corpus_accessor.get_synopsis_lines(ncode)
+    if not contents_lines or not synopsis_lines:
+        return
     is_serif = {idx: int('「' in line) for idx, line in enumerate(contents_lines)}
 
     file_path = os.path.join(IS_SERIF_CONTENTS_DIR_PATH, ncode + '.txt')

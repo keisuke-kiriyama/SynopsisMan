@@ -18,7 +18,8 @@ def construct_is_include_person_data(ncode):
     """
     print('[PROCESS NCODE]: {}'.format(ncode))
     contents_lines = corpus_accessor.get_contents_lines(ncode)
-    if not contents_lines:
+    synopsis_lines = corpus_accessor.get_synopsis_lines(ncode)
+    if not contents_lines or not synopsis_lines:
         return
     is_include_person_dict = dict()
     for line_idx, line in enumerate(contents_lines):
