@@ -1,11 +1,13 @@
 from itertools import chain
+import os
 import re
 import numpy as np
 import MeCab
 from gensim import corpora, matutils
 
 def wakati(line):
-    m = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd -Owakati')
+    dict_path = os.environ['NEOLOGD_PATH']
+    m = MeCab.Tagger('-d ' + dict_path + ' -Owakati')
     wakati = m.parse(line).replace('\n', '')
     return wakati
 
@@ -16,11 +18,12 @@ def cleaning(line):
     return line
 
 def tagger():
-    return MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
+    dict_path = os.environ['NEOLOGD_PATH']
+    return MeCab.Tagger('-d ' + dict_path)
 
 def wakati_tagger():
-    return MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd -Owakati')
-
+    dict_path = os.environ['NEOLOGD_PATH']
+    return MeCab.Tagger('-d ' + dict_path + ' -Owakati')
 
 def convert_serif_marker(contents):
     contents = contents.replace('『', '「')
@@ -43,11 +46,11 @@ def get_morph_info(contents_lines):
     :return: list
     """
     contents = ''.join(contents_lines)
-    tagger = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
-    parsed_contents = tagger.parse(contents)
+    t = tagger()
+    parsed_contents = t.parse(contents)
     if not parsed_contents:
         # 長文でパースに失敗した場合など
-        parsed_lines = [tagger.parse(line) for line in contents_lines]
+        parsed_lines = [t.parse(line) for line in contents_lines]
         morph_lines = list(chain.from_iterable([line.split('\n') for line in parsed_lines]))
         return [re.split('[\t,]',morph) for morph in morph_lines if morph not in ['', 'EOS']]
     return [re.split('[\t,]', morph) for morph in parsed_contents.split('\n') if morph not in ['', 'EOS']]
@@ -59,8 +62,8 @@ def remove_stop_word(sentence):
     :return: list
     """
     part = ['名詞', '動詞', '形容詞', '副詞']
-    m = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
-    morphs = m.parse(sentence).split('\n')
+    t = tagger()
+    morphs = t.parse(sentence).split('\n')
     removed = []
     for morph in morphs:
         splited = re.split('[,\t]', morph)

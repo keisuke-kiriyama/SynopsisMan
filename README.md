@@ -5,6 +5,12 @@
 ```
 pip install -r requirements.txt
 ```
+- You need to set mecab-ipadic-NEologd dictionary path
+- following command is example
+```
+export NEOLOGD_PATH=/usr/local/lib/mecab/dic/mecab-ipadic-neologd
+```
+
 
 ## Check setting path
 - Execute when you want to confirm the setting path.
