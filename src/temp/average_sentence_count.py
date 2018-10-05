@@ -10,35 +10,45 @@ def synopsis_sentence_count():
         synopsis_sentence_counts.append(synopsis_len)
     max_sentence_count = max(synopsis_sentence_counts)
     min_sentence_count = min(synopsis_sentence_counts)
-    avg_sentence_cuont = np.average(synopsis_sentence_counts)
-    bins = np.arange(0, 30, 1)
-    hist, bins = np.histogram(synopsis_sentence_counts, bins=bins)
+    avg_sentence_count = np.average(synopsis_sentence_counts)
+    median_sentence_count = np.median(synopsis_sentence_counts)
+    bins = np.arange(min_sentence_count, max_sentence_count+1, 1)
+    h, b = np.histogram(synopsis_sentence_counts, bins=bins, density=True)
+    print('[INFO] SYNOPSIS SENTENCE')
     print('Max sentence count: ', max_sentence_count)
     print('Min sentence count: ', min_sentence_count)
-    print('Average sentence count: ', avg_sentence_cuont)
+    print('Median sentence count: ', median_sentence_count)
+    print('Average sentence count: ', avg_sentence_count)
     print('Histgram')
-    for val, key in zip(hist, bins):
-        print('sentence count: {} , novel count: {}'.format(key, val))
+    for val, key in zip(h, b):
+        print('sentence count: {} , novel count: {:.3f}%'.format(key, val * 100))
+    print('\n')
 
 def contents_sentence_count():
     contents_sentence_counts = []
+    total = len(corpus_accessor.ncodes)
     for ncode in corpus_accessor.ncodes:
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         contents_sentence_counts.append(contents_len)
     max_sentence_count = max(contents_sentence_counts)
     min_sentence_count = min(contents_sentence_counts)
-    avg_sentence_cuont = np.average(contents_sentence_counts)
+    avg_sentence_count = np.average(contents_sentence_counts)
+    median_sentence_count = np.median(contents_sentence_counts)
     bins = np.arange(0, 5000, 100)
-    hist, bins = np.histogram(contents_sentence_counts, bins=bins)
+    h, b = np.histogram(contents_sentence_counts, bins=bins, density=False)
+    print('[INFO] CONTENTS SENTENCE')
     print('Max sentence count: ', max_sentence_count)
     print('Min sentence count: ', min_sentence_count)
-    print('Average sentence count: ', avg_sentence_cuont)
+    print('Average sentence count: ', avg_sentence_count)
+    print('Median sentence count: ', median_sentence_count)
     print('Histgram')
-    for val, key in zip(hist, bins):
-        print('sentence count: {} , novel count: {}'.format(key, val))
+    for val, key in zip(h, b):
+        print('sentence count: {} , novel count: {:.3f}%'.format(key, val / total * 100))
+    print('\n')
 
 def summarization_rate():
     rates = []
+    total = len(corpus_accessor.ncodes)
     for ncode in corpus_accessor.ncodes:
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
@@ -48,17 +58,19 @@ def summarization_rate():
     max_rate = max(rates)
     min_rate = min(rates)
     avg_rate = np.average(rates)
-    bins = np.arange(0, 0.5, 0.01)
-    hist, bins = np.histogram(rates, bins=bins, density=True)
+    bins = np.arange(0, 0.05, 0.0005)
+    hist, bins = np.histogram(rates, bins=bins, density=False)
+    print('[INFO] SUMMARIZATION RATE')
     print('Max rate: ', max_rate)
     print('Min rate: ', min_rate)
     print('Average sentence count: ', avg_rate)
     print('Histgram')
     for val, key in zip(hist, bins):
-        print('rate: {} , novel count: {}'.format(key, val))
+        print('summarization rate: {:.3f} , novel count: {:.3f}%'.format(key * 100, val / total * 100))
+    print('\n')
 
 
 if __name__ == '__main__':
-    # synopsis_sentence_count()
-    # contents_sentence_count()
+    synopsis_sentence_count()
+    contents_sentence_count()
     summarization_rate()
