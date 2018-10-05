@@ -62,13 +62,38 @@ def contents_sentence_count():
     print('\n')
 
 @cmd.command()
-def summarization_rate():
+def sentences_summarization_rate():
     total = len(corpus_accessor.active_ncodes)
     rates = np.zeros(total)
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
+        if contents_len == 0 or synopsis_len == 0: continue
+        rate = synopsis_len / contents_len
+        rates[i] = rate
+    avg_rate = np.average(rates)
+    median_rate = np.median(rates)
+    std_rate = np.std(rates)
+    bins = np.arange(0, 0.05, 0.0005)
+    hist, bins = np.histogram(rates, bins=bins, density=False)
+    print('[INFO] SUMMARIZATION RATE')
+    print('Average summarization rate: ', avg_rate)
+    print('Median summarization rate: ', median_rate)
+    print('Std summarization rate:', std_rate)
+    print('Histgram')
+    for val, key in zip(hist, bins):
+        print('summarization rate: {:.3f}, novel count: {:.3f}%'.format(key, val / total * 100))
+    print('\n')
+
+@cmd.command()
+def char_summarization_rate():
+    total = len(corpus_accessor.active_ncodes)
+    rates = np.zeros(total)
+    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
+        contents_len = len(''.join(corpus_accessor.get_contents_lines(ncode)))
+        synopsis_len = len(''.join(corpus_accessor.get_synopsis_lines(ncode)))
         if contents_len == 0 or synopsis_len == 0: continue
         rate = synopsis_len / contents_len
         rates[i] = rate
