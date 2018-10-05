@@ -4,12 +4,12 @@ from util.corpus_accessor import CorpusAccessor
 corpus_accessor = CorpusAccessor()
 
 def synopsis_sentence_count():
-    synopsis_sentence_counts = []
     total = len(corpus_accessor.ncodes)
+    synopsis_sentence_counts = np.zeros(total)
     for i, ncode in enumerate(corpus_accessor.ncodes):
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
-        synopsis_sentence_counts.append(synopsis_len)
+        synopsis_sentence_counts[i] = synopsis_len
     max_sentence_count = max(synopsis_sentence_counts)
     min_sentence_count = min(synopsis_sentence_counts)
     avg_sentence_count = np.average(synopsis_sentence_counts)
@@ -27,12 +27,13 @@ def synopsis_sentence_count():
     print('\n')
 
 def contents_sentence_count():
-    contents_sentence_counts = []
     total = len(corpus_accessor.ncodes)
+    contents_sentence_counts = np.zeros(total)
     for i, ncode in enumerate(corpus_accessor.ncodes):
+
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
-        contents_sentence_counts.append(contents_len)
+        contents_sentence_counts[i] = contents_len
     max_sentence_count = max(contents_sentence_counts)
     min_sentence_count = min(contents_sentence_counts)
     avg_sentence_count = np.average(contents_sentence_counts)
@@ -50,15 +51,15 @@ def contents_sentence_count():
     print('\n')
 
 def summarization_rate():
-    rates = []
     total = len(corpus_accessor.ncodes)
+    rates = np.zeros(total)
     for i, ncode in enumerate(corpus_accessor.ncodes):
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
         if contents_len == 0 or synopsis_len == 0: continue
         rate = synopsis_len / contents_len
-        rates.append(rate)
+        rates[i] = rate
     max_rate = max(rates)
     min_rate = min(rates)
     avg_rate = np.average(rates)
