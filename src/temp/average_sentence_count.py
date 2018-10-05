@@ -1,8 +1,14 @@
 import numpy as np
+import click
 from util.corpus_accessor import CorpusAccessor
 
 corpus_accessor = CorpusAccessor()
 
+@click.group()
+def cmd():
+    pass
+
+@cmd.command()
 def synopsis_sentence_count():
     total = len(corpus_accessor.ncodes)
     synopsis_sentence_counts = np.zeros(total)
@@ -26,6 +32,7 @@ def synopsis_sentence_count():
         print('sentence count: {} , novel count: {:.3f}%'.format(key, val * 100))
     print('\n')
 
+@cmd.command()
 def contents_sentence_count():
     total = len(corpus_accessor.ncodes)
     contents_sentence_counts = np.zeros(total)
@@ -50,6 +57,7 @@ def contents_sentence_count():
         print('sentence count: {} , novel count: {:.3f}%'.format(key, val / total * 100))
     print('\n')
 
+@cmd.command()
 def summarization_rate():
     total = len(corpus_accessor.ncodes)
     rates = np.zeros(total)
@@ -74,8 +82,9 @@ def summarization_rate():
         print('summarization rate: {:.3f} , novel count: {:.3f}%'.format(key * 100, val / total * 100))
     print('\n')
 
+def main():
+    cmd()
 
 if __name__ == '__main__':
-    synopsis_sentence_count()
-    contents_sentence_count()
-    summarization_rate()
+    main()
+
