@@ -16,14 +16,25 @@ class CorpusAccessor:
         self.meta_file_paths = [os.path.join(self.meta_data_dir_path, file_name) for file_name in os.listdir(self.meta_data_dir_path) if not file_name == '.DS_Store']
         self.ncodes = [self.ncode_from_file_path(file_path) for file_path in self.contents_file_paths]
 
+        self.active_ncodes = [self.ncode_from_file_name(file_name) for file_name in os.listdir(paths.IS_SERIF_CONTENTS_DIR_PATH) if not file_name == '.DS_Store']
+
     def ncode_from_file_path(self, file_path):
         """
         ファイルpathからncodeを返却する
         """
-        file_name = file_path.split('/')[-1].split('.')[0]
-        if '_meta' in file_name:
-            file_name = file_name.replace('_meta', '')
-        return file_name
+        ncode = file_path.split('/')[-1].split('.')[0]
+        if '_meta' in ncode:
+            ncode = ncode.replace('_meta', '')
+        return ncode
+
+    def ncode_from_file_name(self, file_name):
+        """
+        ファイル名からncodeを返却する
+        """
+        ncode = file_name.split('.')[0]
+        if '_meta' in ncode:
+            ncode = ncode.replace('_meta', '')
+        return ncode
 
     def create_contents_file_path(self, ncode):
         """
@@ -53,6 +64,7 @@ class CorpusAccessor:
         """
         contents_file_path = self.create_contents_file_path(ncode=ncode)
         if not contents_file_path in self.contents_file_paths:
+            print(contents_file_path)
             print('nothing ncode')
             return
         return list(chain.from_iterable(self.load(contents_file_path)['contents']))
