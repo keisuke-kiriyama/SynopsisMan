@@ -62,12 +62,15 @@ def contents_sentence_count():
     print('\n')
 
 @cmd.command()
-def sentences_summarization_rate(long_only=True):
+@click.option('--long', is_flag=True)
+def sentences_summarization_rate(long):
     total = len(corpus_accessor.active_ncodes)
     rates = []
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
-        if long_only:
+        if long:
             if not corpus_accessor.is_long(ncode): continue
+        else:
+            if corpus_accessor.is_long(ncode): continue
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
@@ -89,12 +92,15 @@ def sentences_summarization_rate(long_only=True):
     print('\n')
 
 @cmd.command()
-def char_summarization_rate(long_only=True):
+@click.option('--long', is_flag=True)
+def char_summarization_rate(long):
     total = len(corpus_accessor.active_ncodes)
     rates = []
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
-        if long_only:
+        if long:
             if not corpus_accessor.is_long(ncode): continue
+        else:
+            if corpus_accessor.is_long(ncode): continue
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(''.join(corpus_accessor.get_contents_lines(ncode)))
         synopsis_len = len(''.join(corpus_accessor.get_synopsis_lines(ncode)))
