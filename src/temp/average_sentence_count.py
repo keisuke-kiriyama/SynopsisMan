@@ -35,14 +35,18 @@ def synopsis_sentence_count():
     print('\n')
 
 @cmd.command()
-def contents_sentence_count():
+@click.option('--long', is_flag=True)
+def contents_sentence_count(long):
     total = len(corpus_accessor.active_ncodes)
-    contents_sentence_counts = np.zeros(total)
+    contents_sentence_counts = []
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
-
+        if long:
+            if not corpus_accessor.is_long(ncode): continue
+        else:
+            if corpus_accessor.is_long(ncode): continue
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
-        contents_sentence_counts[i] = contents_len
+        contents_sentence_counts.append(contents_len)
     max_sentence_count = max(contents_sentence_counts)
     min_sentence_count = min(contents_sentence_counts)
     avg_sentence_count = np.average(contents_sentence_counts)
