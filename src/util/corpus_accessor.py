@@ -94,24 +94,18 @@ class CorpusAccessor:
     def get_wakati_synopsis_lines(self, ncode):
         """
         あらすじの各分を分かち書きしたリストを取得
-        :param ncode:
-        :return:
         """
         synopsis_lines = self.get_synopsis_lines(ncode=ncode)
         wakati_synopsis_lines = get_wakati_lines(synopsis_lines)
         return wakati_synopsis_lines
 
-    def remove_error_line_indexes_from_contents_lines(self, contents_lines, error_line_indexes):
+    def is_long(self, ncode):
         """
-        本文からエラーがでた行を削除する
-        :param contents_lines: list
-        :param error_line_indexes: list
-        :return: list
+        長編小説: True, 短編小説: False
         """
-        if error_line_indexes.size == 0:
-            return contents_lines
-        for error_line_index in sorted(error_line_indexes, reverse=True):
-            del contents_lines[int(error_line_index)]
-        return contents_lines
+        file_path = self.create_meta_file_path(ncode)
+        data = self.load(file_path)
+        return data['noveltype'] == 1
+
 
 

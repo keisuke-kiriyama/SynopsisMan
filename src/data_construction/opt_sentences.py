@@ -29,7 +29,6 @@ def construct_opt_sentences_data(ncode, max_sentence_count=30):
     if not contents_lines or not synopsis_lines:
         return
 
-    ref = wakati(''.join(synopsis_lines))
-    max_sentence_count = min(max_sentence_count, len(contents_lines))
+
 
 

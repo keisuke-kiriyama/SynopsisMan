@@ -62,16 +62,18 @@ def contents_sentence_count():
     print('\n')
 
 @cmd.command()
-def sentences_summarization_rate():
+def sentences_summarization_rate(long_only=True):
     total = len(corpus_accessor.active_ncodes)
-    rates = np.zeros(total)
+    rates = []
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        if long_only:
+            if not corpus_accessor.is_long(ncode): continue
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
         if contents_len == 0 or synopsis_len == 0: continue
         rate = synopsis_len / contents_len
-        rates[i] = rate
+        rates.append(rate)
     avg_rate = np.average(rates)
     median_rate = np.median(rates)
     std_rate = np.std(rates)
@@ -87,16 +89,18 @@ def sentences_summarization_rate():
     print('\n')
 
 @cmd.command()
-def char_summarization_rate():
+def char_summarization_rate(long_only=True):
     total = len(corpus_accessor.active_ncodes)
-    rates = np.zeros(total)
+    rates = []
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        if long_only:
+            if not corpus_accessor.is_long(ncode): continue
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(''.join(corpus_accessor.get_contents_lines(ncode)))
         synopsis_len = len(''.join(corpus_accessor.get_synopsis_lines(ncode)))
         if contents_len == 0 or synopsis_len == 0: continue
         rate = synopsis_len / contents_len
-        rates[i] = rate
+        rates.append(rate)
     avg_rate = np.average(rates)
     median_rate = np.median(rates)
     std_rate = np.std(rates)
