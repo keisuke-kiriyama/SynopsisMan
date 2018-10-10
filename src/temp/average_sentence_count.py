@@ -9,6 +9,27 @@ def cmd():
     pass
 
 @cmd.command()
+def synopsis_char_count():
+    total = len(corpus_accessor.active_ncodes)
+    synopsis_char_counts = np.zeros(total)
+    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
+        synopsis_len = len(''.join(corpus_accessor.get_synopsis_lines(ncode)))
+        synopsis_char_counts[i] = synopsis_len
+    max_char_count = max(synopsis_char_counts)
+    min_char_count = min(synopsis_char_counts)
+    avg_char_count = np.average(synopsis_char_counts)
+    median_char_count = np.median(synopsis_char_counts)
+    std_char_count = np.std(synopsis_char_counts)
+    print('[INFO] SYNOPSIS CHAR')
+    print('Max char count: ', max_char_count)
+    print('Min char count: ', min_char_count)
+    print('Median char count: ', median_char_count)
+    print('Average char count: ', avg_char_count)
+    print('Std char count:', std_char_count)
+    print('\n')
+
+@cmd.command()
 def synopsis_sentence_count():
     total = len(corpus_accessor.active_ncodes)
     synopsis_sentence_counts = np.zeros(total)
@@ -32,6 +53,37 @@ def synopsis_sentence_count():
     print('Histgram')
     for val, key in zip(h, b):
         print('sentence count: {} , novel count: {:.3f}%'.format(key, val * 100))
+    print('\n')
+
+@cmd.command()
+@click.option('--long', is_flag=True)
+def contents_char_count(long):
+    total = len(corpus_accessor.active_ncodes)
+    contents_char_counts = []
+    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        # 連載中は除外する
+        if not corpus_accessor.is_end(ncode): continue
+
+        # 短篇と長編を区別する
+        if long:
+            if not corpus_accessor.is_long(ncode): continue
+        else:
+            if corpus_accessor.is_long(ncode): continue
+
+        print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
+        contents_len = len(''.join(corpus_accessor.get_contents_lines(ncode)))
+        contents_char_counts.append(contents_len)
+    max_char_count = max(contents_char_counts)
+    min_char_count = min(contents_char_counts)
+    avg_char_count = np.average(contents_char_counts)
+    median_char_count = np.median(contents_char_counts)
+    std_char_count = np.std(contents_char_counts)
+    print('[INFO] CONTENTS SENTENCE')
+    print('Max sentence count: ', max_char_count)
+    print('Min sentence count: ', min_char_count)
+    print('Average sentence count: ', avg_char_count)
+    print('Median sentence count: ', median_char_count)
+    print('Std sentence count:', std_char_count)
     print('\n')
 
 @cmd.command()
