@@ -94,7 +94,32 @@ python main.py construct_is_include_person_data
 ```
 
 ### Sentence length
-- Execute following command, then entence length data is constructed.
+- Execute following command, then sentence length data is constructed.
 ```
 python main.py construct_sentence_length_data
+```
+
+### Opt Sentences data
+- It is data such as the ROUGE score of the summary created by selecting the ideal sentence with the training data
+- This data has the following structure.
+```
+{
+    opt_sentence_index: np.array,
+    threshold: float,
+    rouge:
+        {
+        f: float,
+        r: float,
+        p: float
+        }
+}
+``` 
+- Execute following command, then this data is constructed.
+    - The parameter represents the following information
+        - --short_rate: summary rate of short stories.
+        - --long_rate: summary rate of long stories.
+        - --min_sentence_count: Maximum number of sentences in synopsis
+        - --max_sentence_count: Minimum number of sentences in synopsis
+```
+python main.py construct_opt_sentences_data --short_rate 5.1 --long_rate 1.3 --min_sentence_count 1 --max_sentence_count 6
 ```

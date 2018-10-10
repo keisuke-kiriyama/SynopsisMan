@@ -16,7 +16,7 @@ class CorpusAccessor:
         self.meta_file_paths = [os.path.join(self.meta_data_dir_path, file_name) for file_name in os.listdir(self.meta_data_dir_path) if not file_name == '.DS_Store']
         self.ncodes = [self.ncode_from_file_path(file_path) for file_path in self.contents_file_paths]
 
-        self.active_ncodes = [self.ncode_from_file_name(file_name) for file_name in os.listdir(paths.IS_SERIF_CONTENTS_DIR_PATH) if not file_name == '.DS_Store']
+        self.active_ncodes = self.get_active_ncodes()
 
     def ncode_from_file_path(self, file_path):
         """
@@ -114,6 +114,32 @@ class CorpusAccessor:
         file_path = self.create_meta_file_path(ncode)
         data = self.load(file_path)
         return data['end'] == 0
+
+    def get_active_ncodes(self):
+        """
+        データの構築状況によりアクティブなncodeを返す
+        """
+        # 理想的な文選択のデータが構築済みの場合
+
+        # 類似度のデータが構築済みの際
+        if len(os.listdir(paths.SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)) > 0:
+            return [self.ncode_from_file_name(file_name)
+                    for file_name in os.listdir(paths.SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)
+                    if not file_name == '.DS_Store']
+
+        # スクレイピングしたデータの前処理が完了している際
+        if len(os.listdir(paths.PREPROCESSED_CONTENTS_DATA_DIR_PATH)) > 0:
+            return [self.ncode_from_file_name(file_name)
+                    for file_name in os.listdir(paths.PREPROCESSED_CONTENTS_DATA_DIR_PATH)
+                    if not file_name == '.DS_Store']
+
+        if len(os.listdir(paths.ORIGIN_CONTENTS_DATA_DIR_PATH)) > 0:
+            return [self.ncode_from_file_name(file_name)
+                    for file_name in os.listdir(paths.ORIGIN_CONTENTS_DATA_DIR_PATH)
+                    if not file_name == '.DS_Store']
+        print("Data haven't stored yet")
+        return None
+
 
 
 
