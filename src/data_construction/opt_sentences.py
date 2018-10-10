@@ -2,6 +2,7 @@ import os
 from rouge import Rouge
 import numpy as np
 import joblib
+import sys
 
 from util.paths import OPT_SENTENCES_DIR_PATH
 from data_supplier import similarity_data_supplier
@@ -78,6 +79,7 @@ def construct(short_rate, long_rate, min_sentence_count, max_sentence_count):
     if not os.path.isdir(save_dir_path):
         os.mkdir(save_dir_path)
     total = len(corpus_accessor.active_ncodes)
+    sys.setrecursionlimit(20000)
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
         print('[INFO] progress: {:.1f}%'.format(i / total * 100))
         print('procesing ncode is ', ncode)
