@@ -78,12 +78,12 @@ def contents_char_count(long):
     avg_char_count = np.average(contents_char_counts)
     median_char_count = np.median(contents_char_counts)
     std_char_count = np.std(contents_char_counts)
-    print('[INFO] CONTENTS SENTENCE')
-    print('Max sentence count: ', max_char_count)
-    print('Min sentence count: ', min_char_count)
-    print('Average sentence count: ', avg_char_count)
-    print('Median sentence count: ', median_char_count)
-    print('Std sentence count:', std_char_count)
+    print('[INFO] CONTENTS CHAR')
+    print('Max char count: ', max_char_count)
+    print('Min char count: ', min_char_count)
+    print('Average char count: ', avg_char_count)
+    print('Median char count: ', median_char_count)
+    print('Std char count:', std_char_count)
     print('\n')
 
 @cmd.command()
@@ -163,6 +163,7 @@ def char_summarization_rate(long):
     total = len(corpus_accessor.active_ncodes)
     rates = []
     not_end_count = 0
+    too_small = 0
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
         # 連載中は除外する
         if not corpus_accessor.is_end(ncode):
@@ -177,6 +178,12 @@ def char_summarization_rate(long):
 
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(''.join(corpus_accessor.get_contents_lines(ncode)))
+        # 長編で文字数が2000文字未満は除外する
+        if long:
+            if contents_len < 2000:
+                too_small += 1
+                continue
+
         synopsis_len = len(''.join(corpus_accessor.get_synopsis_lines(ncode)))
         if contents_len == 0 or synopsis_len == 0: continue
         rate = synopsis_len / contents_len
@@ -195,6 +202,8 @@ def char_summarization_rate(long):
         print('summarization rate: {:.3f}, novel count: {:.3f}%'.format(key, val / total * 100))
     print('\n')
     print('[INFO] Not end novel rate: {:.3f}%'.format(not_end_count / total * 100))
+    print('[INFO] Too small novel rate: {:.3f}%'.format(too_small / total * 100))
+
 
 def main():
     cmd()
