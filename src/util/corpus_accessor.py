@@ -107,5 +107,13 @@ class CorpusAccessor:
         data = self.load(file_path)
         return data['noveltype'] == 1
 
+    def is_end(self, ncode):
+        """
+        完結済み: True, 連載中: False
+        """
+        file_path = self.create_meta_file_path(ncode)
+        data = self.load(file_path)
+        return data['end'] == 0
+
 
 

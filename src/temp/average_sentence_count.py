@@ -40,10 +40,15 @@ def contents_sentence_count(long):
     total = len(corpus_accessor.active_ncodes)
     contents_sentence_counts = []
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        # 連載中は除外する
+        if not corpus_accessor.is_end(ncode): continue
+
+        # 短篇と長編を区別する
         if long:
             if not corpus_accessor.is_long(ncode): continue
         else:
             if corpus_accessor.is_long(ncode): continue
+
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         contents_sentence_counts.append(contents_len)
@@ -71,10 +76,15 @@ def sentences_summarization_rate(long):
     total = len(corpus_accessor.active_ncodes)
     rates = []
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        # 連載中は除外する
+        if not corpus_accessor.is_end(ncode): continue
+
+        # 短篇と長編を区別する
         if long:
             if not corpus_accessor.is_long(ncode): continue
         else:
             if corpus_accessor.is_long(ncode): continue
+
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(corpus_accessor.get_contents_lines(ncode))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
@@ -100,11 +110,19 @@ def sentences_summarization_rate(long):
 def char_summarization_rate(long):
     total = len(corpus_accessor.active_ncodes)
     rates = []
+    not_end_count = 0
     for i, ncode in enumerate(corpus_accessor.active_ncodes):
+        # 連載中は除外する
+        if not corpus_accessor.is_end(ncode):
+            not_end_count += 1
+            continue
+
+        # 短篇と長編を区別する
         if long:
             if not corpus_accessor.is_long(ncode): continue
         else:
             if corpus_accessor.is_long(ncode): continue
+
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_len = len(''.join(corpus_accessor.get_contents_lines(ncode)))
         synopsis_len = len(''.join(corpus_accessor.get_synopsis_lines(ncode)))
@@ -124,6 +142,7 @@ def char_summarization_rate(long):
     for val, key in zip(hist, bins):
         print('summarization rate: {:.3f}, novel count: {:.3f}%'.format(key, val / total * 100))
     print('\n')
+    print('[INFO] Not end novel rate: {:.3f}%'.format(not_end_count / total * 100))
 
 def main():
     cmd()
