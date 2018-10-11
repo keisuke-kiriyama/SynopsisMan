@@ -51,7 +51,7 @@ def construct_opt_sentences_data(ncode, save_dir_path, short_rate, long_rate, mi
     # 用いる要約率の閾値
     rate = long_rate if corpus_accessor.is_long(ncode) else short_rate
 
-    similarity_data = similarity_data_supplier.load_from_ncode(ncode)
+    similarity_data = similarity_data_supplier.load(ncode)
     high_score_line_indexes = np.argsort(-np.array(list(similarity_data.values())))[:max_sentence_count]
 
     hyp = contents_lines[high_score_line_indexes[:min_sentence_count]]

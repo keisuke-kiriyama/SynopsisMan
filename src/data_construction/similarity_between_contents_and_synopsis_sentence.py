@@ -42,4 +42,3 @@ def construct():
     for i, ncode in enumerate(corpus_accessor.ncodes):
         print('[INFO] num of constructed data: {}'.format(i))
         most_similarity_between_contents_and_synopsis_sentence(ncode)
-

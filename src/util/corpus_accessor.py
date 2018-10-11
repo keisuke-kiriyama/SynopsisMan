@@ -120,8 +120,8 @@ class CorpusAccessor:
         データの構築状況によりアクティブなncodeを返す
         """
         # 理想的な文選択のデータが構築済みの場合
-        if len(os.listdir(os.path.join(paths.OPT_SENTENCES_DIR_PATH, 'short_5.1_long_1.3_min_1_max_6'))):
-            return self.__active_ncodes_from_file_path(os.path.join(paths.OPT_SENTENCES_DIR_PATH, 'short_5.1_long_1.3_min_1_max_6'))
+        if len(os.listdir(paths.OPT_SENTENCES_DATA_DIR_PATH)):
+            return self.__active_ncodes_from_file_path(paths.OPT_SENTENCES_DATA_DIR_PATH)
 
         # 類似度のデータが構築済みの際
         if len(os.listdir(paths.SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)) > 0:
