@@ -21,7 +21,7 @@ def verificate_rouge_score():
     bins = np.arange(0, 1, 0.05)
     h, b = np.histogram(scores, bins=bins)
     for key, value in zip(b, h):
-        print('{:.2f}: {}'.format(key, value))
+        print('{:.2f}: {:.1f}%'.format(key, value / total * 100))
 
 
 def main():
