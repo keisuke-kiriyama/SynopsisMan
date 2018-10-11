@@ -120,25 +120,25 @@ class CorpusAccessor:
         データの構築状況によりアクティブなncodeを返す
         """
         # 理想的な文選択のデータが構築済みの場合
+        if len(os.listdir(os.path.join(paths.OPT_SENTENCES_DIR_PATH, 'short_5.1_long_1.3_min_1_max_6'))):
+            return self.__active_ncodes_from_file_path(os.path.join(paths.OPT_SENTENCES_DIR_PATH, 'short_5.1_long_1.3_min_1_max_6'))
 
         # 類似度のデータが構築済みの際
         if len(os.listdir(paths.SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)) > 0:
-            return [self.ncode_from_file_name(file_name)
-                    for file_name in os.listdir(paths.SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)
-                    if not file_name == '.DS_Store']
+            return self.__active_ncodes_from_file_path(paths.SIMILARITY_BETWEEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH)
 
         # スクレイピングしたデータの前処理が完了している際
         if len(os.listdir(paths.PREPROCESSED_CONTENTS_DATA_DIR_PATH)) > 0:
-            return [self.ncode_from_file_name(file_name)
-                    for file_name in os.listdir(paths.PREPROCESSED_CONTENTS_DATA_DIR_PATH)
-                    if not file_name == '.DS_Store']
+            return self.__active_ncodes_from_file_path(paths.PREPROCESSED_CONTENTS_DATA_DIR_PATH)
 
         if len(os.listdir(paths.ORIGIN_CONTENTS_DATA_DIR_PATH)) > 0:
-            return [self.ncode_from_file_name(file_name)
-                    for file_name in os.listdir(paths.ORIGIN_CONTENTS_DATA_DIR_PATH)
-                    if not file_name == '.DS_Store']
+            return self.__active_ncodes_from_file_path(paths.ORIGIN_CONTENTS_DATA_DIR_PATH)
+
         print("Data haven't stored yet")
         return None
+
+    def __active_ncodes_from_file_path(self, path):
+        return [self.ncode_from_file_name(file_name) for file_name in os.listdir(path) if not file_name == '.DS_Store']
 
 
 
