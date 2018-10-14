@@ -146,15 +146,21 @@ def sentences_summarization_rate(long):
     avg_rate = np.average(rates)
     median_rate = np.median(rates)
     std_rate = np.std(rates)
+
     bins = np.arange(0, 0.05, 0.0005)
     hist, bins = np.histogram(rates, bins=bins, density=False)
+
+    rounded_rates = np.array(np.round(rates, 3) * 1000, dtype=int)
+    most_frequency = np.argmax(np.bincount(rounded_rates))
+
     print('[INFO] SUMMARIZATION RATE')
     print('Average summarization rate: ', avg_rate)
     print('Median summarization rate: ', median_rate)
     print('Std summarization rate:', std_rate)
+    print('Most frequency summarization rate: ', most_frequency / 1000)
     print('Histgram')
-    for val, key in zip(hist, bins):
-        print('summarization rate: {:.3f}, novel count: {:.3f}%'.format(key, val / total * 100))
+    # for val, key in zip(hist, bins):
+    #     print('summarization rate: {:.3f}, novel count: {:.3f}%'.format(key, val / total * 100))
     print('\n')
 
 @cmd.command()
@@ -191,15 +197,21 @@ def char_summarization_rate(long):
     avg_rate = np.average(rates)
     median_rate = np.median(rates)
     std_rate = np.std(rates)
+
     bins = np.arange(0, 0.05, 0.0005)
     hist, bins = np.histogram(rates, bins=bins, density=False)
+
+    rounded_rates = np.array(np.round(rates, 3) * 1000, dtype=int)
+    most_frequency = np.argmax(np.bincount(rounded_rates))
+
     print('[INFO] SUMMARIZATION RATE')
     print('Average summarization rate: ', avg_rate)
     print('Median summarization rate: ', median_rate)
     print('Std summarization rate:', std_rate)
+    print('Most frequency summarization rate: ', most_frequency / 1000)
     print('Histgram')
-    for val, key in zip(hist, bins):
-        print('summarization rate: {:.3f}, novel count: {:.3f}%'.format(key, val / total * 100))
+    # for val, key in zip(hist, bins):
+    #     print('summarization rate: {:.3f}, novel count: {:.3f}%'.format(key, val / total * 100))
     print('\n')
     print('[INFO] Not end novel rate: {:.3f}%'.format(not_end_count / total * 100))
     print('[INFO] Too small novel rate: {:.3f}%'.format(too_small / total * 100))
