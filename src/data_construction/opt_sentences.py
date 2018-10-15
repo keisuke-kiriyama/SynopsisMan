@@ -78,9 +78,9 @@ def construct(short_rate, long_rate, min_sentence_count, max_sentence_count):
     save_dir_path = os.path.join(OPT_SENTENCES_DIR_PATH, dir_name)
     if not os.path.isdir(save_dir_path):
         os.mkdir(save_dir_path)
-    total = len(corpus_accessor.active_ncodes)
+    total = len(corpus_accessor.exist_ncodes)
     sys.setrecursionlimit(20000)
-    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         print('[INFO] progress: {:.1f}%'.format(i / total * 100))
         print('procesing ncode is ', ncode)
         construct_opt_sentences_data(ncode=ncode,

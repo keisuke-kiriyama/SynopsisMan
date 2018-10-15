@@ -17,7 +17,7 @@ class CorpusAccessor:
         self.meta_file_paths = [os.path.join(self.meta_data_dir_path, file_name) for file_name in os.listdir(self.meta_data_dir_path) if not file_name == '.DS_Store']
         self.ncodes = [self.ncode_from_file_path(file_path) for file_path in self.contents_file_paths]
 
-        self.active_ncodes = self.get_active_ncodes()
+        self.exist_ncodes = self.get_exist_ncodes()
 
     def ncode_from_file_path(self, file_path):
         """
@@ -118,14 +118,19 @@ class CorpusAccessor:
 
     def get_active_ncodes(self):
         """
-        データの構築状況によりアクティブなncodeを返す
+        使用するncodeのリストを返す
         """
-        # 用いるncodeのデータが構築ずみの場合
         if os.path.isfile(paths.ACTIVE_NCODES_FILE_PATH):
             with open(paths.ACTIVE_NCODES_FILE_PATH, 'rb') as f:
                 data = joblib.load(f)
                 return data
+        else:
+            return
 
+    def get_exist_ncodes(self):
+        """
+        データの構築状況によりファイルが存在するncodeを返す
+        """
         # 理想的な文選択のデータが構築済みの場合
         if os.path.isdir(paths.OPT_SENTENCES_DATA_DIR_PATH) and len(os.listdir(paths.OPT_SENTENCES_DATA_DIR_PATH)) > 0:
             return self.__active_ncodes_from_file_path(paths.OPT_SENTENCES_DATA_DIR_PATH)

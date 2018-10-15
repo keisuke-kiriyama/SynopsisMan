@@ -10,9 +10,9 @@ def cmd():
 
 @cmd.command()
 def synopsis_char_count():
-    total = len(corpus_accessor.active_ncodes)
+    total = len(corpus_accessor.exist_ncodes)
     synopsis_char_counts = np.zeros(total)
-    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         synopsis_len = len(''.join(corpus_accessor.get_synopsis_lines(ncode)))
         synopsis_char_counts[i] = synopsis_len
@@ -31,9 +31,9 @@ def synopsis_char_count():
 
 @cmd.command()
 def synopsis_sentence_count():
-    total = len(corpus_accessor.active_ncodes)
+    total = len(corpus_accessor.exist_ncodes)
     synopsis_sentence_counts = np.zeros(total)
-    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         synopsis_len = len(corpus_accessor.get_synopsis_lines(ncode))
         synopsis_sentence_counts[i] = synopsis_len
@@ -58,9 +58,9 @@ def synopsis_sentence_count():
 @cmd.command()
 @click.option('--long', is_flag=True)
 def contents_char_count(long):
-    total = len(corpus_accessor.active_ncodes)
+    total = len(corpus_accessor.exist_ncodes)
     contents_char_counts = []
-    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         # 連載中は除外する
         if not corpus_accessor.is_end(ncode): continue
 
@@ -89,9 +89,9 @@ def contents_char_count(long):
 @cmd.command()
 @click.option('--long', is_flag=True)
 def contents_sentence_count(long):
-    total = len(corpus_accessor.active_ncodes)
+    total = len(corpus_accessor.exist_ncodes)
     contents_sentence_counts = []
-    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         # 連載中は除外する
         if not corpus_accessor.is_end(ncode): continue
 
@@ -125,9 +125,9 @@ def contents_sentence_count(long):
 @cmd.command()
 @click.option('--long', is_flag=True)
 def sentences_summarization_rate(long):
-    total = len(corpus_accessor.active_ncodes)
+    total = len(corpus_accessor.exist_ncodes)
     rates = []
-    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         # 連載中は除外する
         if not corpus_accessor.is_end(ncode): continue
 
@@ -166,11 +166,11 @@ def sentences_summarization_rate(long):
 @cmd.command()
 @click.option('--long', is_flag=True)
 def char_summarization_rate(long):
-    total = len(corpus_accessor.active_ncodes)
+    total = len(corpus_accessor.exist_ncodes)
     rates = []
     not_end_count = 0
     too_small = 0
-    for i, ncode in enumerate(corpus_accessor.active_ncodes):
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         # 連載中は除外する
         if not corpus_accessor.is_end(ncode):
             not_end_count += 1
