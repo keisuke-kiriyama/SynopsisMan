@@ -5,3 +5,4 @@ from . import is_serif
 from . import is_include_person
 from . import sentence_length
 from . import opt_sentences
+from . import active_ncodes

@@ -101,6 +101,12 @@ def construct_opt_sentences_data(short_rate, long_rate, min_sentence_count, max_
                                               min_sentence_count=min_sentence_count,
                                               max_sentence_count=max_sentence_count)
 
+@cmd.command()
+@click.option('--threshold', '-t', default=0.3)
+def construct_active_ncodes_data(threshold):
+    data_construction.active_ncodes.construct(threshold)
+
+
 
 def main():
 

@@ -123,3 +123,9 @@ python main.py construct_sentence_length_data
 ```
 python main.py construct_opt_sentences_data --short_rate 0.051 --long_rate 0.013 --min_sentence_count 1 --max_sentence_count 6
 ```
+
+- After construct opt sentences data, by doing following command, ncodes to be used is determined.
+    - --threshold: Lower limit of the score given to the novel.
+```
+python main.py construct_active_ncodes_data --threshold 0.3
+```

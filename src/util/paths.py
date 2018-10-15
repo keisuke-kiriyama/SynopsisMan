@@ -8,6 +8,9 @@ PROJECT_ROOT = path.abspath(path.join(SRC_DIR_PATH, pardir))
 DATA_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'data'))
 MODEL_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'model'))
 
+ACTIVE_NCODES_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'active_ncodes'))
+ACTIVE_NCODES_FILE_PATH = path.abspath(path.join(ACTIVE_NCODES_DIR_PATH, 'active_ncodes.txt'))
+
 ORIGIN_DATA_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'origin'))
 ORIGIN_CONTENTS_DATA_DIR_PATH = path.abspath(path.join(ORIGIN_DATA_DIR_PATH, 'contents'))
 ORIGIN_META_DATA_DIR_PATH = path.abspath(path.join(ORIGIN_DATA_DIR_PATH, 'meta'))
@@ -48,6 +51,8 @@ def check():
     print("SRC_DIR_PATH: ", SRC_DIR_PATH)
     print("PROJECT_ROOT: ", PROJECT_ROOT)
     print("DATA_DIR_PATH: ", DATA_DIR_PATH)
+    print("ACTIVE_NCODES_DIR_PATH: ", ACTIVE_NCODES_DIR_PATH)
+    print("ACTIVE_NCODES_FILE_PATH: ", ACTIVE_NCODES_FILE_PATH)
     print("ORIGIN_DATA_DIR_PATH: ", ORIGIN_DATA_DIR_PATH)
     print("ORIGIN_CONTENTS_DATA_DIR_PATH: ", ORIGIN_CONTENTS_DATA_DIR_PATH)
     print("ORIGIN_META_DATA_DIR_PATH: ", ORIGIN_META_DATA_DIR_PATH)
@@ -79,6 +84,8 @@ def mkdir():
         os.mkdir(ORIGIN_CONTENTS_DATA_DIR_PATH)
     if not path.isdir(ORIGIN_META_DATA_DIR_PATH):
         os.mkdir(ORIGIN_META_DATA_DIR_PATH)
+    if not path.isdir(ACTIVE_NCODES_DIR_PATH):
+        os.mkdir(ACTIVE_NCODES_DIR_PATH)
     if not path.isdir(PREPROCESSED_DATA_DIR_PATH):
         os.mkdir(PREPROCESSED_DATA_DIR_PATH)
     if not path.isdir(PREPROCESSED_CONTENTS_DATA_DIR_PATH):

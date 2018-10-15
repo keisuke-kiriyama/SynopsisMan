@@ -1,6 +1,7 @@
 import os
 import json
 from itertools import chain
+import joblib
 
 from util import paths
 from util.text_processor import get_wakati_lines
@@ -119,8 +120,14 @@ class CorpusAccessor:
         """
         データの構築状況によりアクティブなncodeを返す
         """
+        # 用いるncodeのデータが構築ずみの場合
+        if os.path.isfile(paths.ACTIVE_NCODES_FILE_PATH):
+            with open(paths.ACTIVE_NCODES_FILE_PATH, 'rb') as f:
+                data = joblib.load(f)
+                return data
+
         # 理想的な文選択のデータが構築済みの場合
-        if os.path.isdir(paths.OPT_SENTENCES_DATA_DIR_PATH) and len(os.listdir(paths.OPT_SENTENCES_DATA_DIR_PATH)):
+        if os.path.isdir(paths.OPT_SENTENCES_DATA_DIR_PATH) and len(os.listdir(paths.OPT_SENTENCES_DATA_DIR_PATH)) > 0:
             return self.__active_ncodes_from_file_path(paths.OPT_SENTENCES_DATA_DIR_PATH)
 
         # 類似度のデータが構築済みの際
