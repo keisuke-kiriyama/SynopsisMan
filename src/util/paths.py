@@ -10,6 +10,8 @@ MODEL_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'model'))
 
 ACTIVE_NCODES_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'active_ncodes'))
 ACTIVE_NCODES_FILE_PATH = path.abspath(path.join(ACTIVE_NCODES_DIR_PATH, 'active_ncodes.txt'))
+TRAIN_NCODES_FILE_PATH = path.abspath(path.join(ACTIVE_NCODES_DIR_PATH, 'train_ncodes.txt'))
+TEST_NCODES_FILE_PATH = path.abspath(path.join(ACTIVE_NCODES_DIR_PATH, 'test_ncodes.txt'))
 
 ORIGIN_DATA_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'origin'))
 ORIGIN_CONTENTS_DATA_DIR_PATH = path.abspath(path.join(ORIGIN_DATA_DIR_PATH, 'contents'))
@@ -53,6 +55,8 @@ def check():
     print("DATA_DIR_PATH: ", DATA_DIR_PATH)
     print("ACTIVE_NCODES_DIR_PATH: ", ACTIVE_NCODES_DIR_PATH)
     print("ACTIVE_NCODES_FILE_PATH: ", ACTIVE_NCODES_FILE_PATH)
+    print("TRAIN_NCODES_FILE_PATH: ", TRAIN_NCODES_FILE_PATH)
+    print("TEST_NCODES_FILE_PATH: ", TEST_NCODES_FILE_PATH)
     print("ORIGIN_DATA_DIR_PATH: ", ORIGIN_DATA_DIR_PATH)
     print("ORIGIN_CONTENTS_DATA_DIR_PATH: ", ORIGIN_CONTENTS_DATA_DIR_PATH)
     print("ORIGIN_META_DATA_DIR_PATH: ", ORIGIN_META_DATA_DIR_PATH)

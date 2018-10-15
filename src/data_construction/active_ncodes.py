@@ -27,5 +27,3 @@ def construct(threshold):
         joblib.dump(active_ncodes, f, compress=1)
 
 
-
-
