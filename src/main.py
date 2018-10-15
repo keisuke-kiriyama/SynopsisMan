@@ -91,8 +91,8 @@ def construct_sentence_length_data():
     data_construction.sentence_length.construct()
 
 @cmd.command()
-@click.option('--short_rate', '-s', default=5.1)
-@click.option('--long_rate', '-l', default=1.3)
+@click.option('--short_rate', '-s', default=0.051)
+@click.option('--long_rate', '-l', default=0.013)
 @click.option('--min_sentence_count', '-min', default=1)
 @click.option('--max_sentence_count', '-max', default=6)
 def construct_opt_sentences_data(short_rate, long_rate, min_sentence_count, max_sentence_count):

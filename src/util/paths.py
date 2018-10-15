@@ -37,7 +37,7 @@ SENTENCE_LENGTH_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'sentence_lengt
 SENTENCE_LENGTH_CONTENTS_PATH = path.abspath(path.join(SENTENCE_LENGTH_DIR_PATH, 'contents'))
 
 OPT_SENTENCES_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'opt_sentences'))
-OPT_SENTENCES_DATA_DIR_PATH = path.abspath(path.join(OPT_SENTENCES_DIR_PATH, 'short_5.1_long_1.3_min_1_max_6'))
+OPT_SENTENCES_DATA_DIR_PATH = path.abspath(path.join(OPT_SENTENCES_DIR_PATH, 'short_0.051_long_0.013_min_1_max_6'))
 
 WORD_EMBEDDING_MODEL_DIR_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'word_embedding'))
 WORD_EMBEDDING_MODEL_PATH = path.abspath(path.join(WORD_EMBEDDING_MODEL_DIR_PATH, 'word_embedding.model'))

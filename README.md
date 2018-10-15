@@ -121,5 +121,5 @@ python main.py construct_sentence_length_data
         - --min_sentence_count: Maximum number of sentences in synopsis
         - --max_sentence_count: Minimum number of sentences in synopsis
 ```
-python main.py construct_opt_sentences_data --short_rate 5.1 --long_rate 1.3 --min_sentence_count 1 --max_sentence_count 6
+python main.py construct_opt_sentences_data --short_rate 0.051 --long_rate 0.013 --min_sentence_count 1 --max_sentence_count 6
 ```

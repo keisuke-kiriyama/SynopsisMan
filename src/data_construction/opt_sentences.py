@@ -92,7 +92,7 @@ def construct(short_rate, long_rate, min_sentence_count, max_sentence_count):
 
 
 if __name__ == '__main__':
-    construct(short_rate=5.1, long_rate=1.3, min_sentence_count=1, max_sentence_count=6)
+    construct(short_rate=0.051, long_rate=0.013, min_sentence_count=1, max_sentence_count=6)
 
 
 
