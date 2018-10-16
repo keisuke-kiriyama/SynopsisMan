@@ -59,6 +59,13 @@ class Vector_Supplier:
         # NCode
         self.train_ncodes, self.test_ncodes = self.ncodes_train_test_split(test_size=0.2)
 
+        # Num of sentences used per batch
+        self.batch_size = 500
+        # Shape of per batch
+        self.batch_shape = (self.batch_size, self.input_vector_size)
+
+
+
     def ncodes_train_test_split(self, test_size=0.2):
         """
         訓練データとテストデータのncodeを返す
@@ -82,8 +89,13 @@ class Vector_Supplier:
 
         return train_ncodes, test_ncodes
 
-    def create_train_tensor(self):
-        # train_tensor = np.empty()
+    def total_sentence_count(self, ncodes):
+        total = 0
+        for ncode in ncodes:
+            total += len(data_supplier.similarity_data_supplier.load(ncode).keys())
+        return total
+
+    def train_data_generator(self):
         pass
 
 
@@ -102,6 +114,8 @@ if __name__ == '__main__':
                           use_data_of_is_serif=False,
                           use_data_of_is_include_person=False,
                           use_data_of_sentence_length=False)
+
+    sup.total_sentence_count(sup.test_ncodes)
 
 
 
