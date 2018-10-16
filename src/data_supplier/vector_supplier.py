@@ -3,7 +3,7 @@ import joblib
 import numpy as np
 
 from util.corpus_accessor import CorpusAccessor
-from util.paths import TRAIN_NCODES_FILE_PATH, TEST_NCODES_FILE_PATH
+from util.paths import TRAIN_NCODES_FILE_PATH, VALIDATION_NCODES_FILE_PATH, TEST_NCODES_FILE_PATH
 import data_supplier
 
 corpus_accessor = CorpusAccessor()
@@ -57,39 +57,51 @@ class Vector_Supplier:
             self.input_vector_size += sentence_length_dim
 
         # NCode
-        self.train_ncodes, self.test_ncodes = self.ncodes_train_test_split(test_size=0.2)
+        self.train_ncodes, self.validation_ncodes, self.test_ncodes = self.ncodes_train_test_split(validation_size=0.05,
+                                                                                                   test_size=0.2)
 
         # Num of sentences used per batch
         self.batch_size = 500
         # Shape of per batch
         self.batch_shape = (self.batch_size, self.input_vector_size)
+        # Total sentence count
+        self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
 
 
 
-    def ncodes_train_test_split(self, test_size=0.2):
+    def ncodes_train_test_split(self, validation_size = 0.05, test_size=0.2):
         """
         訓練データとテストデータのncodeを返す
         """
-        if os.path.isfile(TRAIN_NCODES_FILE_PATH) and os.path.isfile(TEST_NCODES_FILE_PATH):
+        if os.path.isfile(TRAIN_NCODES_FILE_PATH) \
+                and os.path.isfile(TEST_NCODES_FILE_PATH) \
+                and os.path.isfile(VALIDATION_NCODES_FILE_PATH):
             print('[INFO] loading splited ncodes data...')
             with open(TRAIN_NCODES_FILE_PATH, 'rb') as train_f:
                 train_ncodes = joblib.load(train_f)
+            with open(VALIDATION_NCODES_FILE_PATH, 'rb') as validation_f:
+                validation_ncodes = joblib.load(validation_f)
             with open(TEST_NCODES_FILE_PATH, 'rb') as test_f:
                 test_ncodes = joblib.load(test_f)
 
         else:
             active_ncodes = corpus_accessor.get_active_ncodes()
-            train_ncodes = active_ncodes[:int(len(active_ncodes) * (1 - test_size))]
+            temp_ncodes = active_ncodes[:int(len(active_ncodes) * (1 - test_size))]
             test_ncodes = active_ncodes[int(len(active_ncodes) * (1 - test_size)):]
+            train_ncodes = temp_ncodes[:int(len(temp_ncodes) * (1 - validation_size))]
+            validation_ncodes = temp_ncodes[int(len(temp_ncodes) * (1 - validation_size)):]
             print('[INFO] saving splited ncodes data...')
             with open(TRAIN_NCODES_FILE_PATH, 'wb') as train_f:
                 joblib.dump(train_ncodes, train_f, compress=3)
+            with open(VALIDATION_NCODES_FILE_PATH, 'wb') as validation_f:
+                joblib.dump(validation_ncodes, validation_f, compress=3)
             with open(TEST_NCODES_FILE_PATH, 'wb') as test_f:
                 joblib.dump(test_ncodes, test_f, compress=3)
 
         print('[INFO] train ncodes count: {}'.format(len(train_ncodes)))
+        print('[INFO] validation ncodes count: {}'.format(len(validation_ncodes)))
         print('[INFO] test ncodes count: {}'.format(len(test_ncodes)))
-        return train_ncodes, test_ncodes
+        return train_ncodes, validation_ncodes, test_ncodes
 
     def total_sentence_count(self, ncodes):
         total = 0
