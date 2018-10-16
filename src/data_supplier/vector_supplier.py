@@ -87,11 +87,15 @@ class Vector_Supplier:
             with open(TEST_NCODES_FILE_PATH, 'wb') as test_f:
                 joblib.dump(test_ncodes, test_f, compress=3)
 
+        print('[INFO] train ncodes count: {}'.format(len(train_ncodes)))
+        print('[INFO] test ncodes count: {}'.format(len(test_ncodes)))
         return train_ncodes, test_ncodes
 
     def total_sentence_count(self, ncodes):
         total = 0
-        for ncode in ncodes:
+        for i, ncode in enumerate(ncodes):
+            if i % 1000 == 0:
+                print('[INFO] sentence counting progress: {:.1f}%'.format(i / len(ncodes) * 100))
             total += len(data_supplier.similarity_data_supplier.load(ncode).keys())
         return total
 
