@@ -57,7 +57,7 @@ class Vector_Supplier:
             self.input_vector_size += sentence_length_dim
 
         # NCode
-        self.train_ncodes, self.validation_ncodes, self.test_ncodes = self.ncodes_train_test_split(validation_size=0.05,
+        self.train_ncodes, self.validation_ncodes, self.test_ncodes = self.ncodes_train_test_split(validation_size=0.01,
                                                                                                    test_size=0.2)
 
         # Num of sentences used per batch
@@ -69,7 +69,7 @@ class Vector_Supplier:
 
 
 
-    def ncodes_train_test_split(self, validation_size = 0.05, test_size=0.2):
+    def ncodes_train_test_split(self, validation_size = 0.01, test_size=0.2):
         """
         訓練データとテストデータのncodeを返す
         """
