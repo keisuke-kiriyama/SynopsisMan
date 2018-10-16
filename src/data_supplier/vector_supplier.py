@@ -30,11 +30,11 @@ class Vector_Supplier:
         文の文字数
         """
 
-        self.use_data_of_word_embedding_avg_vector = False
-        self.use_data_of_position_of_sentence = False
-        self.use_data_of_is_serif = False
-        self.use_data_of_is_include_person = False
-        self.use_data_of_sentence_length = False
+        self.use_data_of_word_embedding_avg_vector = use_data_of_word_embedding_avg_vector
+        self.use_data_of_position_of_sentence = use_data_of_position_of_sentence
+        self.use_data_of_is_serif = use_data_of_is_serif
+        self.use_data_of_is_include_person = use_data_of_is_include_person
+        self.use_data_of_sentence_length = use_data_of_sentence_length
 
         # Feature vector dimension
         word_embedding_avg_vector_dim = 200
@@ -66,7 +66,8 @@ class Vector_Supplier:
         self.batch_shape = (self.batch_size, self.input_vector_size)
         # Total sentence count
         self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
-
+        # num of batch of sample
+        self.steps_per_epoch = int(self.train_sentence_count / self.batch_size)
 
 
     def ncodes_train_test_split(self, validation_size = 0.01, test_size=0.2):
@@ -112,7 +113,67 @@ class Vector_Supplier:
         return total
 
     def train_data_generator(self):
-        pass
+        while 1:
+            input_batch_data = np.empty(self.batch_shape)
+            label_batch_data = np.empty(self.batch_size)
+            position_in_batch = 0
+
+            for ncode in self.train_ncodes:
+                similarity_data = data_supplier.similarity_data_supplier.load(ncode)
+                sentence_count = len(similarity_data)
+
+                data_of_word_embedding_avg_vector = None
+                data_of_position_of_sentence = None
+                data_of_is_serif = None
+                data_of_is_include_person = None
+                data_of_sentence_length = None
+
+                if self.use_data_of_word_embedding_avg_vector:
+                    data_of_word_embedding_avg_vector = data_supplier.word_embedding_avg_vector_data_supplier.load(ncode)
+                if self.use_data_of_position_of_sentence:
+                    data_of_position_of_sentence = data_supplier.position_of_sentence_data_supplier.load(ncode)
+                if self.use_data_of_is_serif:
+                    data_of_is_serif = data_supplier.is_serif_data_supplier.load(ncode)
+                if self.use_data_of_is_include_person:
+                    data_of_is_include_person = data_supplier.is_include_person_data_supplier.load(ncode)
+                if self.use_data_of_sentence_length:
+                    data_of_sentence_length = data_supplier.sentence_length_data_supplier.load(ncode)
+
+                for index in range(sentence_count):
+                    input_vector = []
+                    if self.use_data_of_word_embedding_avg_vector:
+                        input_vector.append(data_of_word_embedding_avg_vector[index])
+                    if self.use_data_of_position_of_sentence:
+                        input_vector.append(data_of_position_of_sentence[index])
+                    if self.use_data_of_is_serif:
+                        input_vector.append(data_of_is_serif[index])
+                    if self.use_data_of_is_include_person:
+                        input_vector.append(data_of_is_include_person[index])
+                    if self.use_data_of_sentence_length:
+                        input_vector.append(data_of_sentence_length[index])
+
+                    if not len(input_vector) == self.input_vector_size:
+                        raise ValueError("[ERROR] not equal length of input vector and input vector size")
+
+                    input_batch_data[position_in_batch] = input_vector
+                    label_batch_data[position_in_batch] = similarity_data[index]
+                    position_in_batch += 1
+
+                    if position_in_batch == 100:
+                        yield input_batch_data, label_batch_data
+                        input_batch_data = np.empty(self.batch_shape)
+                        label_batch_data = np.empty(self.batch_size)
+                        position_in_batch = 0
+
+
+
+
+
+
+
+
+
+
 
 
 
