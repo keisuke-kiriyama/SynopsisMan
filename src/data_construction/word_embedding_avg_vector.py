@@ -38,28 +38,14 @@ def sentence_to_word_embedding_avg_vector(ncode):
     for line_idx, line in enumerate(contents_lines):
         if line_idx % 50 == 0:
             print('contents progress: {:.1f}%'.format(line_idx / len(contents_lines) * 100))
-        try:
-            vector = convert_avg_vector(line)
-        except KeyError as err:
-            print(err)
-            continue
-        except:
-            print('[Error] continue to add sentence vectors')
-            continue
+        vector = convert_avg_vector(line)
         contents_line_vectors[line_idx] = vector
 
     # あらすじ文のベクトル化
     synopsis_line_vectors = dict()
     for line_idx, line in enumerate(synopsis_lines):
         print('synopsis progress: {:.1f}%'.format(line_idx / len(contents_lines) * 100))
-        try:
-            vector = convert_avg_vector(line)
-        except KeyError as err:
-            print(err)
-            continue
-        except:
-            print('[Error] continue to add sentence vectors')
-            continue
+        vector = convert_avg_vector(line)
         synopsis_line_vectors[line_idx] = vector
 
     # データの保存

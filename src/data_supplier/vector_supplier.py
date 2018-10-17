@@ -8,7 +8,7 @@ import data_supplier
 
 corpus_accessor = CorpusAccessor()
 
-class Vector_Supplier:
+class VectorSupplier:
 
     def __init__(self,
                  use_data_of_word_embedding_avg_vector=False,
@@ -65,9 +65,9 @@ class Vector_Supplier:
         # Shape of per batch
         self.batch_shape = (self.batch_size, self.input_vector_size)
         # Total sentence count
-        self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
+        # self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
         # num of batch of sample
-        self.steps_per_epoch = int(self.train_sentence_count / self.batch_size)
+        # self.steps_per_epoch = int(self.train_sentence_count / self.batch_size)
 
 
     def ncodes_train_test_split(self, validation_size = 0.01, test_size=0.2):
@@ -110,6 +110,7 @@ class Vector_Supplier:
             if i % 1000 == 0:
                 print('[INFO] sentence counting progress: {:.1f}%'.format(i / len(ncodes) * 100))
             total += len(data_supplier.similarity_data_supplier.load(ncode).keys())
+        print(total)
         return total
 
     def train_data_generator(self):
@@ -119,6 +120,7 @@ class Vector_Supplier:
             position_in_batch = 0
 
             for ncode in self.train_ncodes:
+                print('[INFO]ncode: ', ncode)
                 similarity_data = data_supplier.similarity_data_supplier.load(ncode)
                 sentence_count = len(similarity_data)
 
@@ -142,7 +144,7 @@ class Vector_Supplier:
                 for index in range(sentence_count):
                     input_vector = []
                     if self.use_data_of_word_embedding_avg_vector:
-                        input_vector.append(data_of_word_embedding_avg_vector[index])
+                        input_vector.extend(data_of_word_embedding_avg_vector[index])
                     if self.use_data_of_position_of_sentence:
                         input_vector.append(data_of_position_of_sentence[index])
                     if self.use_data_of_is_serif:
@@ -153,13 +155,14 @@ class Vector_Supplier:
                         input_vector.append(data_of_sentence_length[index])
 
                     if not len(input_vector) == self.input_vector_size:
-                        raise ValueError("[ERROR] not equal length of input vector and input vector size")
+                        raise ValueError("[ERROR] not equal length of input vector({}) and input vector size({})"
+                                         .format(len(input_vector), self.input_vector_size))
 
                     input_batch_data[position_in_batch] = input_vector
                     label_batch_data[position_in_batch] = similarity_data[index]
                     position_in_batch += 1
 
-                    if position_in_batch == 100:
+                    if position_in_batch == self.batch_size:
                         yield input_batch_data, label_batch_data
                         input_batch_data = np.empty(self.batch_shape)
                         label_batch_data = np.empty(self.batch_size)
@@ -172,21 +175,8 @@ class Vector_Supplier:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    sup = Vector_Supplier(use_data_of_word_embedding_avg_vector=True,
+    sup = VectorSupplier(use_data_of_word_embedding_avg_vector=True,
                           use_data_of_position_of_sentence=True,
                           use_data_of_is_serif=False,
                           use_data_of_is_include_person=False,
