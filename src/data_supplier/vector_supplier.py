@@ -61,13 +61,13 @@ class VectorSupplier:
                                                                                                    test_size=0.2)
 
         # Num of sentences used per batch
-        self.batch_size = 500
+        self.batch_size = 50
         # Shape of per batch
         self.batch_shape = (self.batch_size, self.input_vector_size)
         # Total sentence count
-        # self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
+        self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
         # num of batch of sample
-        # self.steps_per_epoch = int(self.train_sentence_count / self.batch_size)
+        self.steps_per_epoch = int(self.train_sentence_count / self.batch_size)
 
 
     def ncodes_train_test_split(self, validation_size = 0.01, test_size=0.2):
@@ -120,7 +120,6 @@ class VectorSupplier:
             position_in_batch = 0
 
             for ncode in self.train_ncodes:
-                print('[INFO]ncode: ', ncode)
                 similarity_data = data_supplier.similarity_data_supplier.load(ncode)
                 sentence_count = len(similarity_data)
 
