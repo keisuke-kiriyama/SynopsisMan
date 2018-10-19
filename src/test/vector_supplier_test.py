@@ -14,9 +14,8 @@ class VectorSupplierTest(unittest.TestCase):
                           use_data_of_sentence_length=True)
 
         train_ncodes = ['n0019bv', 'n0013da', 'n0056dd', 'n0047ec']
-        sup.train_ncodes = train_ncodes
 
-        train_data_generator = sup.train_data_generator()
+        train_data_generator = sup.data_generator(train_ncodes)
 
         tensor = np.empty((0, 204))
         label = []

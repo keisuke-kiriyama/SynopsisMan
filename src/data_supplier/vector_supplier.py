@@ -66,8 +66,10 @@ class VectorSupplier:
         self.batch_shape = (self.batch_size, self.input_vector_size)
         # Total sentence count
         self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
+        self.validation_sentence_count = self.total_sentence_count(self.validation_ncodes)
         # num of batch of sample
-        self.steps_per_epoch = int(self.train_sentence_count / self.batch_size)
+        self.train_steps_per_epoch = int(self.train_sentence_count / self.batch_size)
+        self.validation_steps_per_epoch = int(self.validation_sentence_count / self.batch_size)
 
 
     def ncodes_train_test_split(self, validation_size = 0.01, test_size=0.2):
@@ -114,12 +116,21 @@ class VectorSupplier:
         return total
 
     def train_data_generator(self):
+        return self.data_generator(self.train_ncodes)
+
+    def validation_data_generator(self):
+        return self.data_generator(self.validation_ncodes)
+
+    def test_data_generator(self):
+        return self.data_generator(self.test_ncodes)
+
+    def data_generator(self, ncodes):
         while 1:
             input_batch_data = np.empty(self.batch_shape)
             label_batch_data = np.empty(self.batch_size)
             position_in_batch = 0
 
-            for ncode in self.train_ncodes:
+            for ncode in ncodes:
                 similarity_data = data_supplier.similarity_data_supplier.load(ncode)
                 sentence_count = len(similarity_data)
 
@@ -143,6 +154,8 @@ class VectorSupplier:
                 for index in range(sentence_count):
                     input_vector = []
                     if self.use_data_of_word_embedding_avg_vector:
+                        if not type(data_of_word_embedding_avg_vector[index]) == np.ndarray:
+                            continue
                         input_vector.extend(data_of_word_embedding_avg_vector[index])
                     if self.use_data_of_position_of_sentence:
                         input_vector.append(data_of_position_of_sentence[index])
@@ -166,9 +179,6 @@ class VectorSupplier:
                         input_batch_data = np.empty(self.batch_shape)
                         label_batch_data = np.empty(self.batch_size)
                         position_in_batch = 0
-
-
-
 
 
 
