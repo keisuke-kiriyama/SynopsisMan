@@ -15,7 +15,6 @@ class DNNSummarizer:
     def __init__(self):
 
         # Vector Supplier
-        self.supplier = VectorSupplier()
         self.supplier = VectorSupplier(use_data_of_word_embedding_avg_vector=True,
                                       use_data_of_position_of_sentence=True,
                                       use_data_of_is_serif=True,
@@ -56,8 +55,10 @@ class DNNSummarizer:
 
         early_stopping = EarlyStopping(monitor='val_loss',
                                        patience=10)
-        checkpoint = ModelCheckpoint(filepath=os.path.join(DNN_TRAINED_MODEL_DIR_PATH,
-                                                           '181019',
+        checkpoint_dir_path = os.path.join(DNN_TRAINED_MODEL_DIR_PATH, '181021')
+        if not os.path.isdir(checkpoint_dir_path):
+            os.mkdir(checkpoint_dir_path)
+        checkpoint = ModelCheckpoint(filepath=os.path.join(checkpoint_dir_path,
                                                            'model_{epoch:02d}_vloss{val_loss:.4f}.hdf5'),
                                      save_best_only=True)
         model.fit_generator(
