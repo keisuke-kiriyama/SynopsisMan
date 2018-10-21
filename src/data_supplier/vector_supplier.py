@@ -2,15 +2,15 @@ import os
 import joblib
 import numpy as np
 
-from util.corpus_accessor import CorpusAccessor
-from util.paths import TRAIN_NCODES_FILE_PATH, VALIDATION_NCODES_FILE_PATH, TEST_NCODES_FILE_PATH
 import data_supplier
+from data_supplier.active_ncodes_supplier import ncodes_train_test_split
+from util.paths import DNN_TRAINED_MODEL_DIR_PATH
 
-corpus_accessor = CorpusAccessor()
 
 class VectorSupplier:
 
     def __init__(self,
+                 genre='general',
                  use_data_of_word_embedding_avg_vector=False,
                  use_data_of_position_of_sentence=False,
                  use_data_of_is_serif=False,
@@ -29,6 +29,7 @@ class VectorSupplier:
         :param sentence_length: bool
         文の文字数
         """
+        self.genre = genre
 
         self.use_data_of_word_embedding_avg_vector = use_data_of_word_embedding_avg_vector
         self.use_data_of_position_of_sentence = use_data_of_position_of_sentence
@@ -57,54 +58,41 @@ class VectorSupplier:
             self.input_vector_size += sentence_length_dim
 
         # NCode
-        self.train_ncodes, self.validation_ncodes, self.test_ncodes = self.ncodes_train_test_split(validation_size=0.01,
-                                                                                                   test_size=0.2)
-
+        self.train_ncodes, self.test_ncodes, self.validation_ncodes = ncodes_train_test_split(genre=genre,
+                                                                                              validation_size=0.01,
+                                                                                              test_size=0.2)
         # Num of sentences used per batch
         self.batch_size = 50
         # Shape of per batch
         self.batch_shape = (self.batch_size, self.input_vector_size)
-        # Total sentence count
-        self.train_sentence_count = self.total_sentence_count(self.train_ncodes)
-        self.validation_sentence_count = self.total_sentence_count(self.validation_ncodes)
-        # num of batch of sample
-        self.train_steps_per_epoch = int(self.train_sentence_count / self.batch_size)
-        self.validation_steps_per_epoch = int(self.validation_sentence_count / self.batch_size)
 
+    def trained_model_dir_path(self):
+        feature_dir_name = ''
+        if self.use_data_of_word_embedding_avg_vector:
+            feature_dir_name += 'emb_'
+        if self.use_data_of_position_of_sentence:
+            feature_dir_name += 'pos_'
+        if self.use_data_of_is_serif:
+            feature_dir_name += 'ser_'
+        if self.use_data_of_is_include_person:
+            feature_dir_name += 'per_'
+        if self.use_data_of_sentence_length:
+            feature_dir_name += 'len_'
+        path = os.path.join(DNN_TRAINED_MODEL_DIR_PATH, self.genre)
+        if not os.path.isdir(path):
+            os.mkdir(path)
+        path = os.path.join(path, feature_dir_name)
+        if not os.path.isdir(path):
+            os.mkdir(path)
+        return path
 
-    def ncodes_train_test_split(self, validation_size = 0.01, test_size=0.2):
-        """
-        訓練データとテストデータのncodeを返す
-        """
-        if os.path.isfile(TRAIN_NCODES_FILE_PATH) \
-                and os.path.isfile(TEST_NCODES_FILE_PATH) \
-                and os.path.isfile(VALIDATION_NCODES_FILE_PATH):
-            print('[INFO] loading splited ncodes data...')
-            with open(TRAIN_NCODES_FILE_PATH, 'rb') as train_f:
-                train_ncodes = joblib.load(train_f)
-            with open(VALIDATION_NCODES_FILE_PATH, 'rb') as validation_f:
-                validation_ncodes = joblib.load(validation_f)
-            with open(TEST_NCODES_FILE_PATH, 'rb') as test_f:
-                test_ncodes = joblib.load(test_f)
+    def train_steps_per_epoch(self):
+        train_sentence_count = self.total_sentence_count(self.train_ncodes)
+        return int(train_sentence_count / self.batch_size)
 
-        else:
-            active_ncodes = corpus_accessor.get_active_ncodes()
-            temp_ncodes = active_ncodes[:int(len(active_ncodes) * (1 - test_size))]
-            test_ncodes = active_ncodes[int(len(active_ncodes) * (1 - test_size)):]
-            train_ncodes = temp_ncodes[:int(len(temp_ncodes) * (1 - validation_size))]
-            validation_ncodes = temp_ncodes[int(len(temp_ncodes) * (1 - validation_size)):]
-            print('[INFO] saving splited ncodes data...')
-            with open(TRAIN_NCODES_FILE_PATH, 'wb') as train_f:
-                joblib.dump(train_ncodes, train_f, compress=3)
-            with open(VALIDATION_NCODES_FILE_PATH, 'wb') as validation_f:
-                joblib.dump(validation_ncodes, validation_f, compress=3)
-            with open(TEST_NCODES_FILE_PATH, 'wb') as test_f:
-                joblib.dump(test_ncodes, test_f, compress=3)
-
-        print('[INFO] train ncodes count: {}'.format(len(train_ncodes)))
-        print('[INFO] validation ncodes count: {}'.format(len(validation_ncodes)))
-        print('[INFO] test ncodes count: {}'.format(len(test_ncodes)))
-        return train_ncodes, validation_ncodes, test_ncodes
+    def validation_steps_per_epoch(self):
+        validation_sentence_count = self.total_sentence_count(self.validation_ncodes)
+        return int(validation_sentence_count / self.batch_size)
 
     def total_sentence_count(self, ncodes):
         total = 0
@@ -181,18 +169,15 @@ class VectorSupplier:
                         position_in_batch = 0
 
 
-
-
-
 if __name__ == '__main__':
-    sup = VectorSupplier(use_data_of_word_embedding_avg_vector=True,
-                          use_data_of_position_of_sentence=True,
-                          use_data_of_is_serif=False,
-                          use_data_of_is_include_person=False,
-                          use_data_of_sentence_length=False)
+    sup = VectorSupplier('general',
+                         use_data_of_word_embedding_avg_vector=True,
+                         use_data_of_position_of_sentence=False,
+                         use_data_of_is_serif=True,
+                         use_data_of_is_include_person=False,
+                         use_data_of_sentence_length=False)
 
-    sup.total_sentence_count(sup.test_ncodes)
-
+    print(sup.trained_model_dir_path())
 
 
 

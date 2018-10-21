@@ -116,16 +116,7 @@ class CorpusAccessor:
         data = self.load(file_path)
         return data['end'] == 0
 
-    def get_active_ncodes(self):
-        """
-        使用するncodeのリストを返す
-        """
-        if os.path.isfile(paths.ACTIVE_NCODES_FILE_PATH):
-            with open(paths.ACTIVE_NCODES_FILE_PATH, 'rb') as f:
-                data = joblib.load(f)
-                return data
-        else:
-            return
+
 
     def get_exist_ncodes(self):
         """

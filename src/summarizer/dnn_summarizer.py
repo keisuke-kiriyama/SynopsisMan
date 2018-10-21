@@ -4,7 +4,6 @@ from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, precision_recall_curve, auc
 
 from data_supplier.vector_supplier import VectorSupplier
@@ -13,13 +12,10 @@ from util.paths import DNN_TRAINED_MODEL_DIR_PATH
 class DNNSummarizer:
 
     def __init__(self):
+        pass
 
-        # Vector Supplier
-        self.supplier = VectorSupplier(use_data_of_word_embedding_avg_vector=True,
-                                      use_data_of_position_of_sentence=True,
-                                      use_data_of_is_serif=True,
-                                      use_data_of_is_include_person=True,
-                                      use_data_of_sentence_length=True)
+    def set_supplier(self, supplier):
+        self.supplier = supplier
 
         # DNN MODEL PROPERTY
         self.n_in = self.supplier.input_vector_size
@@ -50,22 +46,21 @@ class DNNSummarizer:
         Feed Foward Neural Netを用いた訓練
         :return:
         """
+        if self.supplier is None:
+            raise ValueError("[ERROR] vector supplier haven't set yet")
         epochs = 100
         model = self.inference()
 
         early_stopping = EarlyStopping(monitor='val_loss',
                                        patience=10)
-        checkpoint_dir_path = os.path.join(DNN_TRAINED_MODEL_DIR_PATH, '181021')
-        if not os.path.isdir(checkpoint_dir_path):
-            os.mkdir(checkpoint_dir_path)
-        checkpoint = ModelCheckpoint(filepath=os.path.join(checkpoint_dir_path,
+        checkpoint = ModelCheckpoint(filepath=os.path.join(self.supplier.trained_model_dir_path(),
                                                            'model_{epoch:02d}_vloss{val_loss:.4f}.hdf5'),
                                      save_best_only=True)
         model.fit_generator(
             self.supplier.train_data_generator(),
-            steps_per_epoch=self.supplier.train_steps_per_epoch,
+            steps_per_epoch=self.supplier.train_steps_per_epoch(),
             validation_data=self.supplier.validation_data_generator(),
-            validation_steps=self.supplier.validation_steps_per_epoch,
+            validation_steps=self.supplier.validation_steps_per_epoch(),
             epochs=epochs,
             shuffle=True,
             callbacks=[early_stopping, checkpoint])

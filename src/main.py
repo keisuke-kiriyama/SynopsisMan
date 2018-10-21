@@ -5,6 +5,8 @@ from util import paths
 import preprocess as p
 from embedding.word_embedding import create_path_line_sentences_files, train_word_embedding_model, test_word_embedding_model
 import data_construction
+from summarizer.dnn_summarizer import DNNSummarizer
+from data_supplier.vector_supplier import VectorSupplier
 
 @click.group()
 def cmd():
@@ -106,6 +108,28 @@ def construct_opt_sentences_data(short_rate, long_rate, min_sentence_count, max_
 def construct_active_ncodes_data(threshold):
     data_construction.active_ncodes.construct(threshold)
 
+@cmd.command()
+@click.option('--genre', '-g', default='general')
+@click.option('--embedding_vector', is_flag=True)
+@click.option('--position', is_flag=True)
+@click.option('--serif', is_flag=True)
+@click.option('--person', is_flag=True)
+@click.option('--sentence_length', is_flag=True)
+def dnn_summarizer_fit(genre,
+                       embedding_vector=False,
+                       position=False,
+                       serif=False,
+                       person=False,
+                       sentence_length=False):
+    summarizer = DNNSummarizer()
+    supplier = VectorSupplier(genre,
+                              use_data_of_word_embedding_avg_vector=embedding_vector,
+                              use_data_of_position_of_sentence=position,
+                              use_data_of_is_serif=serif,
+                              use_data_of_is_include_person=person,
+                              use_data_of_sentence_length=sentence_length)
+    summarizer.set_supplier(supplier)
+    summarizer.fit()
 
 
 def main():

@@ -129,3 +129,26 @@ python main.py construct_opt_sentences_data --short_rate 0.051 --long_rate 0.013
 ```
 python main.py construct_active_ncodes_data --threshold 0.3
 ```
+
+## Train neural net model
+- Execute following command, then neural net model is trained.
+```
+python main.py dnn_summarizer_fit --genre general --embedding_vector --position --serif --person --sentence_length
+```
+
+#### option
+- --genre: genre of novel
+    - general
+    - love_story
+    - fantasy
+    - literature
+    - sf
+    - non_genre
+    - other
+ - feature
+    - --embedding_vector: average vector of word embedding vectors 
+    - --position: position of sentence
+    - --serif: is include serif
+    - --person: is include person name 
+    - --sentence_length: length of sentence
+    

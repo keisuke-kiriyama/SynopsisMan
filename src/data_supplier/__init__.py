@@ -5,3 +5,4 @@ from . import position_of_sentence_data_supplier
 from . import sentence_length_data_supplier
 from . import similarity_data_supplier
 from . import word_embedding_avg_vector_data_supplier
+from . import vector_supplier
