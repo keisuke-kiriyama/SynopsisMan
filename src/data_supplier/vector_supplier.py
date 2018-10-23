@@ -86,6 +86,22 @@ class VectorSupplier:
             os.mkdir(path)
         return path
 
+    def get_trained_model_path(self):
+        dir_path = self.trained_model_dir_path()
+        if not os.path.isdir(dir_path) or len(os.listdir(dir_path)) == 0:
+            raise ValueError("Nothing trained model")
+
+        trained_model_candidate = os.listdir(dir_path)
+        vloss_dict = dict()
+        for candidate in trained_model_candidate:
+            if not 'model' in candidate: continue
+            vloss = str(candidate.split('vloss')[1]).replace('.hdf5', '')
+            vloss_dict[vloss] = candidate
+
+        min_vloss = min(vloss_dict.keys())
+        model_path = os.path.join(dir_path, vloss_dict[min_vloss])
+        return model_path
+
     def train_steps_per_epoch(self):
         train_sentence_count = self.total_sentence_count(self.train_ncodes)
         return int(train_sentence_count / self.batch_size)
@@ -168,17 +184,65 @@ class VectorSupplier:
                         label_batch_data = np.empty(self.batch_size)
                         position_in_batch = 0
 
+    def test_data_input(self, ncode):
+        similarity_data = data_supplier.similarity_data_supplier.load(ncode)
+        sentence_count = len(similarity_data)
+        data_of_word_embedding_avg_vector = None
+
+        data_of_position_of_sentence = None
+        data_of_is_serif = None
+        data_of_is_include_person = None
+        data_of_sentence_length = None
+
+        if self.use_data_of_word_embedding_avg_vector:
+            data_of_word_embedding_avg_vector = data_supplier.word_embedding_avg_vector_data_supplier.load(ncode)
+        if self.use_data_of_position_of_sentence:
+            data_of_position_of_sentence = data_supplier.position_of_sentence_data_supplier.load(ncode)
+        if self.use_data_of_is_serif:
+            data_of_is_serif = data_supplier.is_serif_data_supplier.load(ncode)
+        if self.use_data_of_is_include_person:
+            data_of_is_include_person = data_supplier.is_include_person_data_supplier.load(ncode)
+        if self.use_data_of_sentence_length:
+            data_of_sentence_length = data_supplier.sentence_length_data_supplier.load(ncode)
+
+        tensor = []
+
+        for index in range(sentence_count):
+            input_vector = []
+            if self.use_data_of_word_embedding_avg_vector:
+                if not type(data_of_word_embedding_avg_vector[index]) == np.ndarray:
+                    tensor.append(list(np.zeros(self.input_vector_size)))
+                    continue
+                input_vector.extend(data_of_word_embedding_avg_vector[index])
+            if self.use_data_of_position_of_sentence:
+                input_vector.append(data_of_position_of_sentence[index])
+            if self.use_data_of_is_serif:
+                input_vector.append(data_of_is_serif[index])
+            if self.use_data_of_is_include_person:
+                input_vector.append(data_of_is_include_person[index])
+            if self.use_data_of_sentence_length:
+                input_vector.append(data_of_sentence_length[index])
+
+            if not len(input_vector) == self.input_vector_size:
+                raise ValueError("[ERROR] not equal length of input vector({}) and input vector size({})"
+                                 .format(len(input_vector), self.input_vector_size))
+
+            tensor.append(input_vector)
+        return np.array(tensor)
+
 
 if __name__ == '__main__':
-    sup = VectorSupplier('general',
+    sup = VectorSupplier('love_story',
                          use_data_of_word_embedding_avg_vector=True,
-                         use_data_of_position_of_sentence=False,
+                         use_data_of_position_of_sentence=True,
                          use_data_of_is_serif=True,
                          use_data_of_is_include_person=False,
                          use_data_of_sentence_length=False)
 
-    print(sup.trained_model_dir_path())
-
-
+    ncode = 'n0002ei'
+    tensor = sup.test_data_input(ncode)
+    print(type(tensor))
+    print(len(tensor))
+    print(len(tensor[0]))
 
 
