@@ -7,6 +7,10 @@ from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.metrics import mean_squared_error, precision_recall_curve, auc
 
+import keras
+from keras.layers import Input, Embedding, LSTM, Dense, concatenate
+from keras.models import Model
+
 from data_supplier.vector_supplier import VectorSupplier
 from util.corpus_accessor import CorpusAccessor
 from util.paths import DNN_TRAINED_MODEL_DIR_PATH
@@ -23,9 +27,6 @@ class DNNSummarizer:
         self.supplier = supplier
 
         # DNN MODEL PROPERTY
-        self.n_in = self.supplier.input_vector_size
-        self.n_hiddens = [800, 800]
-        self.n_out = 1
         self.activation = 'relu'
         self.p_keep = 0.5
 
@@ -48,16 +49,30 @@ class DNNSummarizer:
         DNNで重回帰分析を行うモデルを構築する
         :return: Sequential
         """
-        model = Sequential()
-        for i, input_dim in enumerate(([self.n_in] + self.n_hiddens)[:-1]):
-            model.add(Dense(self.n_hiddens[i], input_dim=input_dim))
-            model.add(BatchNormalization())
-            model.add(Activation(self.activation))
-            model.add(Dropout(self.p_keep))
-        model.add(Dense(self.n_out))
-        model.add(Activation('linear'))
+        if self.supplier is None:
+            raise ValueError("[ERROR] vector supplier haven't set yet")
+        max_count_of_words = self.supplier.max_count_of_words
+        word_emb_dim = self.supplier.word_embedding_vector_dim
+
+        main_input = Input(shape=(max_count_of_words, word_emb_dim), dtype='float', name='embedding')
+        lstm_out = LSTM(200, input_shape=(self.supplier.word_embedding_batch_shape))(main_input)
+
+        # 文をエンコードするLSTMを訓練するための補助出力
+        auxiliary_output = Dense(1, activation=self.activation, name='aux_output')(lstm_out)
+
+        features_input = Input(shape=(self.supplier.multi_feature_dim,), name='features')
+        x = keras.layers.concatenate([lstm_out, features_input])
+
+        x = Dense(800, activation=self.activation)(x)
+        x = Dense(800, activation=self.activation)(x)
+        x = Dense(800, activation=self.activation)(x)
+
+        main_output = Dense(1, activation='linear', name='main_output')(x)
+        model = Model(inputs=[main_input, features_input], outputs=[main_output, auxiliary_output])
+
         model.compile(loss='mean_squared_error',
-                      optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999))
+                      optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999),
+                      loss_weights=[1., 0.2])
         return model
 
     def fit(self):
@@ -124,7 +139,6 @@ class DNNSummarizer:
 if __name__ == '__main__':
     s = DNNSummarizer()
     supplier = VectorSupplier('general',
-                              use_data_of_word_embedding_avg_vector=True,
                               use_data_of_position_of_sentence=True,
                               use_data_of_is_serif=True,
                               use_data_of_is_include_person=True,

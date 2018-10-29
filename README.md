@@ -63,16 +63,11 @@ python main.py test_word_embedding -w 部屋
 ```
 
 ## Training data construction
-### Average of word embedding vectors
-- Execute following command, then average of word embedding vectors data is constructed.
-```
-python main.py construct_word_embedding_avg_vector
-```
 
 ### Similarity between contents and synopsis
 - Execute following command, then data on the similarity between the contents and the synopsis is constructed
 ```
-python main.py construct_similarity_data:
+python main.py construct_similarity_data
 ```
 
 ### Position of sentence
@@ -133,7 +128,7 @@ python main.py construct_active_ncodes_data --threshold 0.3
 ## Train neural net model
 - Execute following command, then neural net model is trained.
 ```
-python main.py dnn_summarizer_fit --genre general --embedding_vector --position --serif --person --sentence_length
+python main.py dnn_summarizer_fit --genre general --position --serif --person --sentence_length
 ```
 
 #### option

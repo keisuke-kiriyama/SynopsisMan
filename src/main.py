@@ -51,6 +51,13 @@ def test_word_embedding(word):
     test_word_embedding_model(word)
 
 @cmd.command()
+def construct_word_embedding_vectors():
+    """
+    文中の単語の分散表現ベクトルのリストのデータを構築する
+    """
+    data_construction.word_embedding_vectors.construct()
+
+@cmd.command()
 def construct_word_embedding_avg_vector():
     """
     文中の単語の分散表現ベクトルの平均ベクトルのデータを構築する
@@ -110,20 +117,17 @@ def construct_active_ncodes_data(threshold):
 
 @cmd.command()
 @click.option('--genre', '-g', default='general')
-@click.option('--embedding_vector', is_flag=True)
 @click.option('--position', is_flag=True)
 @click.option('--serif', is_flag=True)
 @click.option('--person', is_flag=True)
 @click.option('--sentence_length', is_flag=True)
 def dnn_summarizer_fit(genre,
-                       embedding_vector=False,
                        position=False,
                        serif=False,
                        person=False,
                        sentence_length=False):
     summarizer = DNNSummarizer()
     supplier = VectorSupplier(genre,
-                              use_data_of_word_embedding_avg_vector=embedding_vector,
                               use_data_of_position_of_sentence=position,
                               use_data_of_is_serif=serif,
                               use_data_of_is_include_person=person,
