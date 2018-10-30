@@ -72,7 +72,7 @@ python main.py construct_similarity_data
 ```
 - based on rouge score
 ```
-python main.py rouge_between_contents_and_synopsis_sentence
+python main.py construct_rouge_similarity_data
 ```
 
 ### Position of sentence
