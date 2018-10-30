@@ -14,6 +14,7 @@ class VectorSupplier:
 
     def __init__(self,
                  genre='general',
+                 importance='cos_sim',
                  use_data_of_position_of_sentence=False,
                  use_data_of_is_serif=False,
                  use_data_of_is_include_person=False,
@@ -31,8 +32,11 @@ class VectorSupplier:
         :param sentence_length: bool
         文の文字数
         """
-        self.genre = genre
+        if not importance in ['cos_sim', 'rouge']:
+            raise ValueError('[ERROR]importance must be cos_soim or rouge')
 
+        self.genre = genre
+        self.importance = importance
         self.use_data_of_position_of_sentence = use_data_of_position_of_sentence
         self.use_data_of_is_serif = use_data_of_is_serif
         self.use_data_of_is_include_person = use_data_of_is_include_person
@@ -73,7 +77,8 @@ class VectorSupplier:
         """
         使用する素性に基づいて保存するディレクトリのpathを決定する
         """
-        feature_dir_name = 'emb_'
+        feature_dir_name = self.importance + '_'
+        feature_dir_name += 'emb_'
         if self.use_data_of_position_of_sentence:
             feature_dir_name += 'pos_'
         if self.use_data_of_is_serif:
@@ -146,7 +151,12 @@ class VectorSupplier:
             for ncode in ncodes:
                 contents_lines = data_accessor.get_contents_lines(ncode)
 
-                similarity_data = data_supplier.similarity_data_supplier.load(ncode)
+                if self.importance == 'cos_sim':
+                    similarity_data = data_supplier.similarity_data_supplier.load(ncode)
+                elif self.importance == 'rouge':
+                    similarity_data = data_supplier.rouge_data_supplier.load(ncode)
+                else:
+                    raise ValueError('[ERROR]importance must be cos_soim or rouge')
                 sentence_count = len(similarity_data)
 
                 if not len(contents_lines) == sentence_count:
@@ -208,7 +218,12 @@ class VectorSupplier:
     def test_data_input(self, ncode):
         contents_lines = data_accessor.get_contents_lines(ncode)
 
-        similarity_data = data_supplier.similarity_data_supplier.load(ncode)
+        if self.importance == 'cos_sim':
+            similarity_data = data_supplier.similarity_data_supplier.load(ncode)
+        elif self.importance == 'rouge':
+            similarity_data = data_supplier.rouge_data_supplier.load(ncode)
+        else:
+            raise ValueError('[ERROR]importance must be cos_soim or rouge')
         sentence_count = len(similarity_data)
 
         if len(contents_lines) == sentence_count:
@@ -262,6 +277,7 @@ class VectorSupplier:
 
 if __name__ == '__main__':
     sup = VectorSupplier('general',
+                         importance='cos_sim',
                          use_data_of_position_of_sentence=True,
                          use_data_of_is_serif=True,
                          use_data_of_is_include_person=True,

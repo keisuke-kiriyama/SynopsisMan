@@ -133,11 +133,11 @@ python main.py construct_active_ncodes_data --threshold 0.3
 ## Train neural net model
 - Execute following command, then neural net model is trained.
 ```
-python main.py dnn_summarizer_fit --genre general --position --serif --person --sentence_length
+python main.py dnn_summarizer_fit -g general -i cos_sim --position --serif --person --sentence_length
 ```
 
 #### option
-- --genre: genre of novel
+- --genre or -g: genre of novel
     - general
     - love_story
     - fantasy
@@ -145,7 +145,11 @@ python main.py dnn_summarizer_fit --genre general --position --serif --person --
     - sf
     - non_genre
     - other
- - feature
+- --importance or -i : importance score
+    - cos_sim
+    - rouge
+    
+- feature
     - --embedding_vector: average vector of word embedding vectors 
     - --position: position of sentence
     - --serif: is include serif
