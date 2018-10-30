@@ -72,6 +72,13 @@ def construct_similarity_data():
     data_construction.similarity_between_contents_and_synopsis_sentence.construct()
 
 @cmd.command()
+def construct_rouge_similarity_data():
+    """
+    本文中の各文とあらすじ文各文のROUGEのデータを構築する
+    """
+    data_construction.rouge_between_contents_and_synopsis_sentence.construct()
+
+@cmd.command()
 def construct_position_of_sentence_data():
     """
     本文各文の出現位置のデータを構築する

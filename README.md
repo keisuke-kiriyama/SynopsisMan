@@ -66,8 +66,13 @@ python main.py test_word_embedding -w 部屋
 
 ### Similarity between contents and synopsis
 - Execute following command, then data on the similarity between the contents and the synopsis is constructed
+- based on cos similarity
 ```
 python main.py construct_similarity_data
+```
+- based on rouge score
+```
+python main.py rouge_between_contents_and_synopsis_sentence
 ```
 
 ### Position of sentence
