@@ -66,7 +66,7 @@ class VectorSupplier:
         # Num of sentences used per batch
         self.batch_size = 50
         # Max num of words in sentence
-        self.max_count_of_words = 30
+        self.max_count_of_words = 50
         # Shape of per batch
         self.word_embedding_batch_shape = (self.batch_size, self.max_count_of_words, self.word_embedding_vector_dim)
         # Shape of multi features vector
@@ -125,10 +125,16 @@ class VectorSupplier:
 
     def total_sentence_count(self, ncodes):
         total = 0
+        if self.importance == 'cos_sim':
+            supplier = data_supplier.similarity_data_supplier
+        elif self.importance == 'rouge':
+            supplier = data_supplier.rouge_data_supplier
+        else:
+            raise ValueError('[ERROR]importance must be cos_soim or rouge')
         for i, ncode in enumerate(ncodes):
             if i % 1000 == 0:
                 print('[INFO] sentence counting progress: {:.1f}%'.format(i / len(ncodes) * 100))
-            total += len(data_supplier.similarity_data_supplier.load(ncode).keys())
+            total += len(supplier.load(ncode).keys())
         print(total)
         return total
 
