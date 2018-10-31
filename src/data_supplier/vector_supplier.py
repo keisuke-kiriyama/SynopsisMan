@@ -40,6 +40,7 @@ class VectorSupplier:
         if not os.path.isfile(WORD_EMBEDDING_MODEL_PATH):
             raise ValueError('[ERROR] word embedding model is not exist')
         self.word_embedding_model = word2vec.Word2Vec.load(WORD_EMBEDDING_MODEL_PATH)
+        self.vocabulary_size = len(self.word_embedding_model.wv.vocab)
 
         self.genre = genre
         self.importance = importance

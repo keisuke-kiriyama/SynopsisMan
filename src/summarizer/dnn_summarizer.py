@@ -53,20 +53,22 @@ class DNNSummarizer:
 
         if not os.path.isfile(EMBEDDING_MATRIX_PATH):
             raise ValueError("[ERROR] embedding matrix hax not been constructed.")
-        with open(EMBEDDING_MATRIX_PATH, 'rb') as f:
-            embedding_matrix = joblib.load(f)
+        # with open(EMBEDDING_MATRIX_PATH, 'rb') as f:
+        #     embedding_matrix = joblib.load(f)
 
         max_count_of_words = self.supplier.max_count_of_words
+        vocabulary_size = self.supplier.vocabulary_size
+        embedding_vector_dim = self.supplier.word_embedding_vector_dim
 
         main_input = Input(shape=(max_count_of_words,), dtype='int32', name='sequence')
-        x = Embedding(input_dim=embedding_matrix.shape[0],
-                      output_dim=embedding_matrix.shape[1],
+        x = Embedding(input_dim=vocabulary_size + 1,
+                      output_dim=embedding_vector_dim,
                       input_length=max_count_of_words,
-                      weights=[embedding_matrix],
-                      trainable=False,
+                      # weights=[embedding_matrix],
+                      trainable=True,
                       mask_zero=True,
                       name='embedding')(main_input)
-        lstm_out = LSTM(200, input_shape=(self.supplier.word_index_batch_shape))(x)
+        lstm_out = LSTM(64, input_shape=(self.supplier.word_index_batch_shape))(x)
 
         # 文をエンコードするLSTMを訓練するための補助出力
         auxiliary_output = Dense(1, activation='linear', name='aux_output')(lstm_out)
