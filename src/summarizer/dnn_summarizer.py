@@ -53,8 +53,8 @@ class DNNSummarizer:
 
         if not os.path.isfile(EMBEDDING_MATRIX_PATH):
             raise ValueError("[ERROR] embedding matrix hax not been constructed.")
-        # with open(EMBEDDING_MATRIX_PATH, 'rb') as f:
-        #     embedding_matrix = joblib.load(f)
+        with open(EMBEDDING_MATRIX_PATH, 'rb') as f:
+            embedding_matrix = joblib.load(f)
 
         max_count_of_words = self.supplier.max_count_of_words
         vocabulary_size = self.supplier.vocabulary_size
@@ -64,8 +64,8 @@ class DNNSummarizer:
         x = Embedding(input_dim=vocabulary_size + 1,
                       output_dim=embedding_vector_dim,
                       input_length=max_count_of_words,
-                      # weights=[embedding_matrix],
-                      trainable=True,
+                      weights=[embedding_matrix],
+                      trainable=False,
                       mask_zero=True,
                       name='embedding')(main_input)
         lstm_out = LSTM(64, input_shape=(self.supplier.word_index_batch_shape))(x)
