@@ -1,12 +1,14 @@
 import os
 import joblib
 import numpy as np
+from gensim.models import word2vec
 
 import data_supplier
 from data_supplier.active_ncodes_supplier import ncodes_train_test_split
-from data_construction.word_embedding_vectors import convert_word_embedding_vectors
 from util.paths import DNN_TRAINED_MODEL_DIR_PATH
 from util.corpus_accessor import CorpusAccessor
+from util.paths import WORD_EMBEDDING_MODEL_PATH
+from util import text_processor
 
 data_accessor = CorpusAccessor()
 
@@ -34,6 +36,10 @@ class VectorSupplier:
         """
         if not importance in ['cos_sim', 'rouge']:
             raise ValueError('[ERROR]importance must be cos_soim or rouge')
+
+        if not os.path.isfile(WORD_EMBEDDING_MODEL_PATH):
+            raise ValueError('[ERROR] word embedding model is not exist')
+        self.word_embedding_model = word2vec.Word2Vec.load(WORD_EMBEDDING_MODEL_PATH)
 
         self.genre = genre
         self.importance = importance
@@ -66,9 +72,9 @@ class VectorSupplier:
         # Num of sentences used per batch
         self.batch_size = 50
         # Max num of words in sentence
-        self.max_count_of_words = 50
+        self.max_count_of_words = 200
         # Shape of per batch
-        self.word_embedding_batch_shape = (self.batch_size, self.max_count_of_words, self.word_embedding_vector_dim)
+        self.word_index_batch_shape = (self.batch_size, self.max_count_of_words)
         # Shape of multi features vector
         self.multi_feature_batch_shape = (self.batch_size, self.multi_feature_dim)
 
@@ -138,6 +144,11 @@ class VectorSupplier:
         print(total)
         return total
 
+    def word_index_add_one(self, word):
+        if not word in self.word_embedding_model.wv.vocab:
+            raise('[ERROR] word does not exist in vocabulary')
+        return self.word_embedding_model.wv.vocab[word].index + 1
+
     def train_data_generator(self):
         return self.data_generator(self.train_ncodes)
 
@@ -149,7 +160,7 @@ class VectorSupplier:
 
     def data_generator(self, ncodes):
         while 1:
-            word_embedding_batch_data = np.empty(self.word_embedding_batch_shape)
+            word_index_batch_data = np.empty(self.word_index_batch_shape)
             multi_feature_batch_data = np.empty(self.multi_feature_batch_shape)
             label_batch_data = np.empty(self.batch_size)
             position_in_batch = 0
@@ -166,8 +177,6 @@ class VectorSupplier:
                 sentence_count = len(similarity_data)
 
                 if not len(contents_lines) == sentence_count:
-                    print('contents_lines: ', len(contents_lines))
-                    print('sentence_count: ', sentence_count)
                     raise ValueError('[ERROR] num of contents lines is not equal to similarity data count')
 
                 data_of_position_of_sentence = None
@@ -185,12 +194,12 @@ class VectorSupplier:
                     data_of_sentence_length = data_supplier.sentence_length_data_supplier.load(ncode)
 
                 for index in range(sentence_count):
-                    # 単語埋め込みのテンソル構築
-                    word_embedding_tensor = np.zeros(shape=(self.max_count_of_words, self.word_embedding_vector_dim))
-                    tensor = convert_word_embedding_vectors(contents_lines[index])
-                    for i, vector in enumerate(tensor):
+                    # 文中の単語インデックスの系列ベクトル構築
+                    word_index_sequence = np.zeros(self.max_count_of_words, dtype='int32')
+                    words = text_processor.wakati(contents_lines[index]).split()
+                    for i, word in enumerate(words):
                         if i == self.max_count_of_words: break
-                        word_embedding_tensor[i] = vector
+                        word_index_sequence[i] = self.word_index_add_one(word)
 
                     # 追加の素性ベクトルの構築
                     multi_feature_vector = []
@@ -207,15 +216,15 @@ class VectorSupplier:
                         raise ValueError("[ERROR] not equal length of input vector({}) and input vector size({})"
                                          .format(len(multi_feature_vector), self.multi_feature_dim))
 
-                    word_embedding_batch_data[position_in_batch] = word_embedding_tensor
+                    word_index_batch_data[position_in_batch] = word_index_sequence
                     multi_feature_batch_data[position_in_batch] = multi_feature_vector
                     label_batch_data[position_in_batch] = similarity_data[index]
                     position_in_batch += 1
 
                     if position_in_batch == self.batch_size:
-                        yield ({'embedding': word_embedding_batch_data, 'features': multi_feature_batch_data},
+                        yield ({'sequence': word_index_batch_data, 'features': multi_feature_batch_data},
                                {'main_output': label_batch_data, 'aux_output': label_batch_data})
-                        word_embedding_batch_data = np.empty(self.word_embedding_batch_shape)
+                        word_index_batch_data = np.empty(self.word_index_batch_shape)
                         multi_feature_batch_data = np.empty(self.multi_feature_batch_shape)
                         label_batch_data = np.empty(self.batch_size)
                         position_in_batch = 0
@@ -249,15 +258,16 @@ class VectorSupplier:
         if self.use_data_of_sentence_length:
             data_of_sentence_length = data_supplier.sentence_length_data_supplier.load(ncode)
 
-        word_embedding_data = []
+        word_index_data = []
         multi_feature_data = []
 
         for index in range(sentence_count):
-            # 単語埋め込みのテンソル構築
-            word_embedding_tensor = np.zeros(shape=(self.max_count_of_words, self.word_embedding_vector_dim))
-            tensor = convert_word_embedding_vectors(contents_lines[index])
-            for i, vector in enumerate(tensor):
-                word_embedding_tensor[i] = vector
+            # 文中の単語インデックスの系列ベクトル構築
+            word_index_sequence = np.zeros(self.max_count_of_words, dtype='int32')
+            words = text_processor.wakati(contents_lines[index]).split()
+            for i, word in enumerate(words):
+                if i == self.max_count_of_words: break
+                word_index_sequence[i] = self.word_index_add_one(word)
 
             # 追加の素性ベクトルの構築
             multi_feature_vector = []
@@ -274,10 +284,10 @@ class VectorSupplier:
                 raise ValueError("[ERROR] not equal length of input vector({}) and input vector size({})"
                                  .format(len(multi_feature_vector), self.multi_feature_dim))
 
-            word_embedding_data.append(word_embedding_tensor)
+            word_index_data.append(word_index_sequence)
             multi_feature_data.append(multi_feature_vector)
 
-            return {'embedding': word_embedding_data, 'features': multi_feature_data}
+            return {'sequence': word_index_data, 'features': multi_feature_data}
 
 
 
@@ -289,6 +299,10 @@ if __name__ == '__main__':
                          use_data_of_is_include_person=True,
                          use_data_of_sentence_length=True)
     gen = sup.train_data_generator()
-    next(gen)
+    # print(batch[0]['sequence'])
+    # list = [49,6,30,4,17,495,53,13,200,9,1219,2]
+    # for a in list:
+    #     print(sup.word_embedding_model.wv.index2word[a - 1])
+
 
 
