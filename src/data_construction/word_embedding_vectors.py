@@ -1,4 +1,3 @@
-import numpy as np
 import os
 from gensim.models import word2vec
 import joblib

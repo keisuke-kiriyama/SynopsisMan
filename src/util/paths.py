@@ -48,6 +48,9 @@ OPT_SENTENCES_DATA_DIR_PATH = path.abspath(path.join(OPT_SENTENCES_DIR_PATH, 'sh
 WORD_EMBEDDING_MODEL_DIR_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'word_embedding'))
 WORD_EMBEDDING_MODEL_PATH = path.abspath(path.join(WORD_EMBEDDING_MODEL_DIR_PATH, 'word_embedding.model'))
 
+EMBEDDING_MATRIX_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'embedding_matrix'))
+EMBEDDING_MATRIX_PATH = path.abspath(path.join(EMBEDDING_MATRIX_DIR_PATH, 'embedding_matrix.txt'))
+
 DNN_TRAINED_MODEL_DIR_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'dnn_trained_model'))
 
 
@@ -84,6 +87,8 @@ def check():
     print("OPT_SENTENCES_DATA_DIR_PATH: ", OPT_SENTENCES_DATA_DIR_PATH)
     print("MODEL_DIR_PATH: ", MODEL_DIR_PATH)
     print("WORD_EMBEDDING_MODEL_PATH: ", WORD_EMBEDDING_MODEL_PATH)
+    print("EMBEDDING_MATRIX_DIR_PATH: ", EMBEDDING_MATRIX_DIR_PATH)
+    print("EMBEDDING_MATRIX_PATH: ", EMBEDDING_MATRIX_PATH)
     print("DNN_TRAINED_MODEL_DIR_PATH: ", DNN_TRAINED_MODEL_DIR_PATH)
 
 def mkdir():
@@ -137,7 +142,9 @@ def mkdir():
         os.mkdir(OPT_SENTENCES_DIR_PATH)
     if not path.isdir(MODEL_DIR_PATH):
         os.mkdir(MODEL_DIR_PATH)
-    if not WORD_EMBEDDING_MODEL_DIR_PATH:
+    if not path.isdir(WORD_EMBEDDING_MODEL_DIR_PATH):
         os.mkdir(WORD_EMBEDDING_MODEL_DIR_PATH)
-    if not DNN_TRAINED_MODEL_DIR_PATH:
+    if not path.isdir(EMBEDDING_MATRIX_DIR_PATH):
+        os.mkdir(EMBEDDING_MATRIX_DIR_PATH)
+    if not path.isdir(DNN_TRAINED_MODEL_DIR_PATH):
         os.mkdir(DNN_TRAINED_MODEL_DIR_PATH)

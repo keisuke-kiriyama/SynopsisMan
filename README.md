@@ -65,6 +65,7 @@ python main.py test_word_embedding -w 部屋
 ## Training data construction
 
 ### Similarity between contents and synopsis
+
 - Execute following command, then data on the similarity between the contents and the synopsis is constructed
 - based on cos similarity
 ```
@@ -74,6 +75,11 @@ python main.py construct_similarity_data
 ```
 python main.py construct_rouge_similarity_data
 ```
+
+- When embedding model has constructed, execute following command
+```
+python main.py construct_embedding_matrix
+``` 
 
 ### Position of sentence
 - Execute following command, then data of position of sentence is constructed.

@@ -64,8 +64,14 @@ class DNNSummarizer:
         x = keras.layers.concatenate([lstm_out, features_input])
 
         x = Dense(800, activation=self.activation)(x)
+        x = BatchNormalization()(x)
+        x = Dropout(.3)(x)
         x = Dense(800, activation=self.activation)(x)
+        x = BatchNormalization()(x)
+        x = Dropout(.3)(x)
         x = Dense(800, activation=self.activation)(x)
+        x = BatchNormalization()(x)
+        x = Dropout(.3)(x)
 
         main_output = Dense(1, activation='linear', name='main_output')(x)
         model = Model(inputs=[main_input, features_input], outputs=[main_output, auxiliary_output])

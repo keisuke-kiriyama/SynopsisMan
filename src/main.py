@@ -51,6 +51,13 @@ def test_word_embedding(word):
     test_word_embedding_model(word)
 
 @cmd.command()
+def construct_embedding_matrix():
+    """
+    単語の分散表現のマトリックス構築
+    """
+    data_construction.embedding_matrix.construct()
+
+@cmd.command()
 def construct_word_embedding_vectors():
     """
     文中の単語の分散表現ベクトルのリストのデータを構築する
