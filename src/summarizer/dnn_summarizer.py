@@ -26,6 +26,9 @@ class DNNSummarizer:
         self.supplier = supplier
 
         # DNN MODEL PROPERTY
+        self.n_in = self.supplier.input_vector_size
+        self.n_hiddens = [800, 800]
+        self.n_out = 1
         self.activation = 'relu'
         self.p_keep = 0.5
 
@@ -48,47 +51,15 @@ class DNNSummarizer:
         DNNで重回帰分析を行うモデルを構築する
         :return: Sequential
         """
-        if self.supplier is None:
-            raise ValueError("[ERROR] vector supplier haven't set yet")
-
-        if not os.path.isfile(EMBEDDING_MATRIX_PATH):
-            raise ValueError("[ERROR] embedding matrix hax not been constructed.")
-        with open(EMBEDDING_MATRIX_PATH, 'rb') as f:
-            embedding_matrix = joblib.load(f)
-
-        max_count_of_words = self.supplier.max_count_of_words
-        vocabulary_size = self.supplier.vocabulary_size
-        embedding_vector_dim = self.supplier.word_embedding_vector_dim
-
-        main_input = Input(shape=(max_count_of_words,), dtype='int32', name='sequence')
-        x = Embedding(input_dim=vocabulary_size + 1,
-                      output_dim=embedding_vector_dim,
-                      input_length=max_count_of_words,
-                      weights=[embedding_matrix],
-                      trainable=False,
-                      mask_zero=True,
-                      name='embedding')(main_input)
-        lstm_out = LSTM(64, input_shape=(self.supplier.word_index_batch_shape))(x)
-
-        # 文をエンコードするLSTMを訓練するための補助出力
-        auxiliary_output = Dense(1, activation='linear', name='aux_output')(lstm_out)
-
-        features_input = Input(shape=(self.supplier.multi_feature_dim,), name='features')
-        x = keras.layers.concatenate([lstm_out, features_input])
-
-        x = Dense(800, activation=self.activation)(x)
-        x = BatchNormalization()(x)
-        x = Dropout(.3)(x)
-        x = Dense(800, activation=self.activation)(x)
-        x = BatchNormalization()(x)
-        x = Dropout(.3)(x)
-
-        main_output = Dense(1, activation='linear', name='main_output')(x)
-        model = Model(inputs=[main_input, features_input], outputs=[main_output, auxiliary_output])
-
-        model.compile(loss='mean_squared_error',
-                      optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999),
-                      loss_weights=[1., 0.2])
+        model = Sequential()
+        for i, input_dim in enumerate(([self.n_in] + self.n_hiddens)[:-1]):
+            model.add(Dense(self.n_hiddens[i], input_dim=input_dim))
+            model.add(BatchNormalization())
+            model.add(Activation(self.activation))
+            model.add(Dropout(self.p_keep))
+        model.add(Dense(self.n_out))
+        model.add(Activation('linear'))
+        model.compile(loss='mean_squared_error', optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999))
         return model
 
     def fit(self):

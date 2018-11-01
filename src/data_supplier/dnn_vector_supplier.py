@@ -1,5 +1,4 @@
 import os
-import joblib
 import numpy as np
 from gensim.models import word2vec
 
@@ -8,7 +7,6 @@ from data_supplier.active_ncodes_supplier import ncodes_train_test_split
 from util.paths import DNN_TRAINED_MODEL_DIR_PATH
 from util.corpus_accessor import CorpusAccessor
 from util.paths import WORD_EMBEDDING_MODEL_PATH
-from util import text_processor
 
 data_accessor = CorpusAccessor()
 
@@ -37,11 +35,6 @@ class DNNVectorSupplier:
         if not importance in ['cos_sim', 'rouge']:
             raise ValueError('[ERROR]importance must be cos_soim or rouge')
 
-        if not os.path.isfile(WORD_EMBEDDING_MODEL_PATH):
-            raise ValueError('[ERROR] word embedding model is not exist')
-        self.word_embedding_model = word2vec.Word2Vec.load(WORD_EMBEDDING_MODEL_PATH)
-        self.vocabulary_size = len(self.word_embedding_model.wv.vocab)
-
         self.genre = genre
         self.importance = importance
         self.use_data_of_position_of_sentence = use_data_of_position_of_sentence
@@ -56,15 +49,15 @@ class DNNVectorSupplier:
         is_include_person_dim = 1
         sentence_length_dim = 1
 
-        self.multi_feature_dim = 0
+        self.input_vector_size = self.word_embedding_vector_dim
         if use_data_of_position_of_sentence:
-            self.multi_feature_dim += position_of_sentence_dim
+            self.input_vector_size += position_of_sentence_dim
         if use_data_of_is_serif:
-            self.multi_feature_dim += is_serif_dim
+            self.input_vector_size += is_serif_dim
         if use_data_of_is_include_person:
-            self.multi_feature_dim += is_include_person_dim
+            self.input_vector_size += is_include_person_dim
         if use_data_of_sentence_length:
-            self.multi_feature_dim += sentence_length_dim
+            self.input_vector_size += sentence_length_dim
 
         # NCode
         self.train_ncodes, self.test_ncodes, self.validation_ncodes = ncodes_train_test_split(genre=genre,
@@ -72,13 +65,8 @@ class DNNVectorSupplier:
                                                                                               test_size=0.2)
         # Num of sentences used per batch
         self.batch_size = 50
-        # Max num of words in sentence
-        self.max_count_of_words = 200
         # Shape of per batch
-        self.word_index_batch_shape = (self.batch_size, self.max_count_of_words)
-        # Shape of multi features vector
-        self.multi_feature_batch_shape = (self.batch_size, self.multi_feature_dim)
-
+        self.batch_shape = (self.batch_size, self.input_vector_size)
 
     def trained_model_dir_path(self):
         """
@@ -145,11 +133,6 @@ class DNNVectorSupplier:
         print(total)
         return total
 
-    def word_index_add_one(self, word):
-        if not word in self.word_embedding_model.wv.vocab:
-            raise('[ERROR] word does not exist in vocabulary')
-        return self.word_embedding_model.wv.vocab[word].index + 1
-
     def train_data_generator(self):
         return self.data_generator(self.train_ncodes)
 
@@ -161,14 +144,11 @@ class DNNVectorSupplier:
 
     def data_generator(self, ncodes):
         while 1:
-            word_index_batch_data = np.empty(self.word_index_batch_shape)
-            multi_feature_batch_data = np.empty(self.multi_feature_batch_shape)
+            input_batch_data = np.empty(self.batch_shape)
             label_batch_data = np.empty(self.batch_size)
             position_in_batch = 0
 
             for ncode in ncodes:
-                contents_lines = data_accessor.get_contents_lines(ncode)
-
                 if self.importance == 'cos_sim':
                     similarity_data = data_supplier.similarity_data_supplier.load(ncode)
                 elif self.importance == 'rouge':
@@ -177,9 +157,7 @@ class DNNVectorSupplier:
                     raise ValueError('[ERROR]importance must be cos_soim or rouge')
                 sentence_count = len(similarity_data)
 
-                if not len(contents_lines) == sentence_count:
-                    raise ValueError('[ERROR] num of contents lines is not equal to similarity data count')
-
+                data_of_word_embedding_avg_vector = data_supplier.word_embedding_avg_vector_data_supplier.load(ncode)
                 data_of_position_of_sentence = None
                 data_of_is_serif = None
                 data_of_is_include_person = None
@@ -195,45 +173,35 @@ class DNNVectorSupplier:
                     data_of_sentence_length = data_supplier.sentence_length_data_supplier.load(ncode)
 
                 for index in range(sentence_count):
-                    # 文中の単語インデックスの系列ベクトル構築
-                    word_index_sequence = np.zeros(self.max_count_of_words, dtype='int32')
-                    words = text_processor.wakati(contents_lines[index]).split()
-                    for i, word in enumerate(words):
-                        if i == self.max_count_of_words: break
-                        word_index_sequence[i] = self.word_index_add_one(word)
-
-                    # 追加の素性ベクトルの構築
-                    multi_feature_vector = []
+                    input_vector = []
+                    if not type(data_of_word_embedding_avg_vector[index]) == np.ndarray:
+                        continue
+                    input_vector.extend(data_of_word_embedding_avg_vector[index])
                     if self.use_data_of_position_of_sentence:
-                        multi_feature_vector.append(data_of_position_of_sentence[index])
+                        input_vector.append(data_of_position_of_sentence[index])
                     if self.use_data_of_is_serif:
-                        multi_feature_vector.append(data_of_is_serif[index])
+                        input_vector.append(data_of_is_serif[index])
                     if self.use_data_of_is_include_person:
-                        multi_feature_vector.append(data_of_is_include_person[index])
+                        input_vector.append(data_of_is_include_person[index])
                     if self.use_data_of_sentence_length:
-                        multi_feature_vector.append(data_of_sentence_length[index])
+                        input_vector.append(data_of_sentence_length[index])
 
-                    if not len(multi_feature_vector) == self.multi_feature_dim:
+                    if not len(input_vector) == self.input_vector_size:
                         raise ValueError("[ERROR] not equal length of input vector({}) and input vector size({})"
-                                         .format(len(multi_feature_vector), self.multi_feature_dim))
+                                         .format(len(input_vector), self.input_vector_size))
 
-                    word_index_batch_data[position_in_batch] = word_index_sequence
-                    multi_feature_batch_data[position_in_batch] = multi_feature_vector
+                    input_batch_data[position_in_batch] = input_vector
                     label_batch_data[position_in_batch] = similarity_data[index]
                     position_in_batch += 1
 
                     if position_in_batch == self.batch_size:
-                        yield ({'sequence': word_index_batch_data, 'features': multi_feature_batch_data},
-                               {'main_output': label_batch_data, 'aux_output': label_batch_data})
-                        word_index_batch_data = np.empty(self.word_index_batch_shape)
-                        multi_feature_batch_data = np.empty(self.multi_feature_batch_shape)
+                        yield input_batch_data, label_batch_data
+                        input_batch_data = np.empty(self.batch_shape)
                         label_batch_data = np.empty(self.batch_size)
                         position_in_batch = 0
 
 
     def test_data_input(self, ncode):
-        contents_lines = data_accessor.get_contents_lines(ncode)
-
         if self.importance == 'cos_sim':
             similarity_data = data_supplier.similarity_data_supplier.load(ncode)
         elif self.importance == 'rouge':
@@ -242,9 +210,7 @@ class DNNVectorSupplier:
             raise ValueError('[ERROR]importance must be cos_soim or rouge')
         sentence_count = len(similarity_data)
 
-        if len(contents_lines) == sentence_count:
-            raise ValueError('[ERROR] num of contents lines is not equal to similarity data count')
-
+        data_of_word_embedding_avg_vector = data_supplier.word_embedding_avg_vector_data_supplier.load(ncode)
         data_of_position_of_sentence = None
         data_of_is_serif = None
         data_of_is_include_person = None
@@ -259,36 +225,29 @@ class DNNVectorSupplier:
         if self.use_data_of_sentence_length:
             data_of_sentence_length = data_supplier.sentence_length_data_supplier.load(ncode)
 
-        word_index_data = []
-        multi_feature_data = []
+        tensor = []
 
         for index in range(sentence_count):
-            # 文中の単語インデックスの系列ベクトル構築
-            word_index_sequence = np.zeros(self.max_count_of_words, dtype='int32')
-            words = text_processor.wakati(contents_lines[index]).split()
-            for i, word in enumerate(words):
-                if i == self.max_count_of_words: break
-                word_index_sequence[i] = self.word_index_add_one(word)
-
-            # 追加の素性ベクトルの構築
-            multi_feature_vector = []
+            input_vector = []
+            if not type(data_of_word_embedding_avg_vector[index]) == np.ndarray:
+                continue
+            input_vector.extend(data_of_word_embedding_avg_vector[index])
             if self.use_data_of_position_of_sentence:
-                multi_feature_vector.append(data_of_position_of_sentence[index])
+                input_vector.append(data_of_position_of_sentence[index])
             if self.use_data_of_is_serif:
-                multi_feature_vector.append(data_of_is_serif[index])
+                input_vector.append(data_of_is_serif[index])
             if self.use_data_of_is_include_person:
-                multi_feature_vector.append(data_of_is_include_person[index])
+                input_vector.append(data_of_is_include_person[index])
             if self.use_data_of_sentence_length:
-                multi_feature_vector.append(data_of_sentence_length[index])
+                input_vector.append(data_of_sentence_length[index])
 
-            if not len(multi_feature_vector) == self.multi_feature_dim:
+            if not len(input_vector) == self.input_vector_size:
                 raise ValueError("[ERROR] not equal length of input vector({}) and input vector size({})"
-                                 .format(len(multi_feature_vector), self.multi_feature_dim))
+                                 .format(len(input_vector), self.input_vector_size))
 
-            word_index_data.append(word_index_sequence)
-            multi_feature_data.append(multi_feature_vector)
+            tensor.append(input_vector)
 
-            return {'sequence': word_index_data, 'features': multi_feature_data}
+        return np.array(tensor)
 
 
 

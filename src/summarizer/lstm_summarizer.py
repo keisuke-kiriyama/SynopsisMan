@@ -45,7 +45,7 @@ class LSTMSummarizer:
 
     def inference(self):
         """
-        DNNで重回帰分析を行うモデルを構築する
+        LSTM&DNNで重回帰分析を行うモデルを構築する
         :return: Sequential
         """
         if self.supplier is None:
