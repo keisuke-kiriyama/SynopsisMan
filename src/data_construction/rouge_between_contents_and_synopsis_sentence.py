@@ -17,6 +17,9 @@ def rouge_between_contents_and_synopsis_sentence(ncode):
     [1: ROUGE, 2: ROUGE, ... , n: ROUGE]
     """
     print('[PROCESS NCODE]: {}'.format(ncode))
+    file_path = os.path.join(ROUGE_BETWEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH, ncode + '.txt')
+    if os.path.isfile(file_path):
+        return
     contents_lines = corpus_accessor.get_contents_lines(ncode)
     synopsis_lines = corpus_accessor.get_synopsis_lines(ncode)
     if not contents_lines or not synopsis_lines:
@@ -41,7 +44,6 @@ def rouge_between_contents_and_synopsis_sentence(ncode):
 
         max_similarity = max(scores)
         similarity_dict[line_idx] = max_similarity
-    file_path = os.path.join(ROUGE_BETWEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH, ncode + '.txt')
     print('[INFO] saving data: {}'.format(ncode))
     with open(file_path, 'wb') as f:
         joblib.dump(similarity_dict, f, compress=3)
