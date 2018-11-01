@@ -146,8 +146,6 @@ class VectorSupplier:
         return total
 
     def word_index_add_one(self, word):
-        print('あああ')
-        print(word)
         if not word in self.word_embedding_model.wv.vocab:
             raise('[ERROR] word does not exist in vocabulary')
         return self.word_embedding_model.wv.vocab[word].index + 1
