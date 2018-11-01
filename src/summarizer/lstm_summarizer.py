@@ -12,12 +12,12 @@ from sklearn.metrics import mean_squared_error, precision_recall_curve, auc
 
 from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
 from util.corpus_accessor import CorpusAccessor
-from util.paths import DNN_TRAINED_MODEL_DIR_PATH, EMBEDDING_MATRIX_PATH
+from util.paths import EMBEDDING_MATRIX_PATH
 
 
 corpus_accessor = CorpusAccessor()
 
-class DNNSummarizer:
+class LSTMSummarizer:
 
     def __init__(self):
         pass
@@ -153,7 +153,7 @@ class DNNSummarizer:
 
 
 if __name__ == '__main__':
-    s = DNNSummarizer()
+    s = LSTMSummarizer()
     supplier = LSTMVectorSupplier('general',
                                   use_data_of_position_of_sentence=True,
                                   use_data_of_is_serif=True,

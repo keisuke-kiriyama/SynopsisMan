@@ -1,17 +1,17 @@
 import unittest
 import numpy as np
 
-from data_supplier.vector_supplier import VectorSupplier
+from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
 import data_supplier
 
 class VectorSupplierTest(unittest.TestCase):
 
     def test_train_data_generator(self):
-        sup = VectorSupplier(use_data_of_word_embedding_avg_vector=True,
-                          use_data_of_position_of_sentence=True,
-                          use_data_of_is_serif=True,
-                          use_data_of_is_include_person=True,
-                          use_data_of_sentence_length=True)
+        sup = LSTMVectorSupplier(use_data_of_word_embedding_avg_vector=True,
+                                 use_data_of_position_of_sentence=True,
+                                 use_data_of_is_serif=True,
+                                 use_data_of_is_include_person=True,
+                                 use_data_of_sentence_length=True)
 
         train_ncodes = ['n0019bv', 'n0013da', 'n0056dd', 'n0047ec']
 

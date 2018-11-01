@@ -5,8 +5,10 @@ from util import paths
 import preprocess as p
 from embedding.word_embedding import create_path_line_sentences_files, train_word_embedding_model, test_word_embedding_model
 import data_construction
+from summarizer.lstm_summarizer import LSTMSummarizer
 from summarizer.dnn_summarizer import DNNSummarizer
-from data_supplier.vector_supplier import VectorSupplier
+from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
+from data_supplier.dnn_vector_supplier import DNNVectorSupplier
 
 @click.group()
 def cmd():
@@ -137,18 +139,41 @@ def construct_active_ncodes_data(threshold):
 @click.option('--person', is_flag=True)
 @click.option('--sentence_length', is_flag=True)
 def dnn_summarizer_fit(genre,
-                       importance,
-                       position=False,
-                       serif=False,
-                       person=False,
-                       sentence_length=False):
+                        importance,
+                        position=False,
+                        serif=False,
+                        person=False,
+                        sentence_length=False):
     summarizer = DNNSummarizer()
-    supplier = VectorSupplier(genre,
-                              importance=importance,
-                              use_data_of_position_of_sentence=position,
-                              use_data_of_is_serif=serif,
-                              use_data_of_is_include_person=person,
-                              use_data_of_sentence_length=sentence_length)
+    supplier = DNNVectorSupplier(genre,
+                                  importance=importance,
+                                  use_data_of_position_of_sentence=position,
+                                  use_data_of_is_serif=serif,
+                                  use_data_of_is_include_person=person,
+                                  use_data_of_sentence_length=sentence_length)
+    summarizer.set_supplier(supplier)
+    summarizer.fit()
+
+@cmd.command()
+@click.option('--genre', '-g', default='general')
+@click.option('--importance', '-i', default='cos_sim')
+@click.option('--position', is_flag=True)
+@click.option('--serif', is_flag=True)
+@click.option('--person', is_flag=True)
+@click.option('--sentence_length', is_flag=True)
+def lstm_summarizer_fit(genre,
+                        importance,
+                        position=False,
+                        serif=False,
+                        person=False,
+                        sentence_length=False):
+    summarizer = LSTMSummarizer()
+    supplier = LSTMVectorSupplier(genre,
+                                  importance=importance,
+                                  use_data_of_position_of_sentence=position,
+                                  use_data_of_is_serif=serif,
+                                  use_data_of_is_include_person=person,
+                                  use_data_of_sentence_length=sentence_length)
     summarizer.set_supplier(supplier)
     summarizer.fit()
 

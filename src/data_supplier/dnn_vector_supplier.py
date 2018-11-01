@@ -12,7 +12,7 @@ from util import text_processor
 
 data_accessor = CorpusAccessor()
 
-class VectorSupplier:
+class DNNVectorSupplier:
 
     def __init__(self,
                  genre='general',
@@ -293,12 +293,12 @@ class VectorSupplier:
 
 
 if __name__ == '__main__':
-    sup = VectorSupplier('general',
-                         importance='cos_sim',
-                         use_data_of_position_of_sentence=True,
-                         use_data_of_is_serif=True,
-                         use_data_of_is_include_person=True,
-                         use_data_of_sentence_length=True)
+    sup = DNNVectorSupplier('general',
+                             importance='cos_sim',
+                             use_data_of_position_of_sentence=True,
+                             use_data_of_is_serif=True,
+                             use_data_of_is_include_person=True,
+                             use_data_of_sentence_length=True)
     gen = sup.train_data_generator()
     # print(batch[0]['sequence'])
     # list = [49,6,30,4,17,495,53,13,200,9,1219,2]

@@ -138,8 +138,13 @@ python main.py construct_active_ncodes_data --threshold 0.3
 
 ## Train neural net model
 - Execute following command, then neural net model is trained.
+#### DNN
 ```
 python main.py dnn_summarizer_fit -g general -i cos_sim --position --serif --person --sentence_length
+```
+#### LSTM
+```
+python main.py lstm_summarizer_fit -g general -i cos_sim --position --serif --person --sentence_length
 ```
 
 #### option

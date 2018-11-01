@@ -52,6 +52,7 @@ EMBEDDING_MATRIX_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'embedding_mat
 EMBEDDING_MATRIX_PATH = path.abspath(path.join(EMBEDDING_MATRIX_DIR_PATH, 'embedding_matrix.txt'))
 
 DNN_TRAINED_MODEL_DIR_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'dnn_trained_model'))
+LSTM_TRAINED_MODEL_DIR_PATH = path.abspath(path.join(MODEL_DIR_PATH, 'lstm_trained_model'))
 
 
 def check():
@@ -90,6 +91,7 @@ def check():
     print("EMBEDDING_MATRIX_DIR_PATH: ", EMBEDDING_MATRIX_DIR_PATH)
     print("EMBEDDING_MATRIX_PATH: ", EMBEDDING_MATRIX_PATH)
     print("DNN_TRAINED_MODEL_DIR_PATH: ", DNN_TRAINED_MODEL_DIR_PATH)
+    print("LSTM_TRAINED_MODEL_DIR_PATH: ", LSTM_TRAINED_MODEL_DIR_PATH)
 
 def mkdir():
     if not path.isdir(ORIGIN_DATA_DIR_PATH):
@@ -148,3 +150,5 @@ def mkdir():
         os.mkdir(EMBEDDING_MATRIX_DIR_PATH)
     if not path.isdir(DNN_TRAINED_MODEL_DIR_PATH):
         os.mkdir(DNN_TRAINED_MODEL_DIR_PATH)
+    if not path.isdir(LSTM_TRAINED_MODEL_DIR_PATH):
+        os.mkdir(LSTM_TRAINED_MODEL_DIR_PATH)

@@ -6,4 +6,5 @@ from . import sentence_length_data_supplier
 from . import similarity_data_supplier
 from . import rouge_data_supplier
 from . import word_embedding_avg_vector_data_supplier
-from . import vector_supplier
+from . import lstm_vector_supplier
+from . import dnn_vector_supplier
