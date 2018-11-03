@@ -27,6 +27,7 @@ def evaluate(genre='general',
                                  use_data_of_is_include_person=use_data_of_is_include_person,
                                  use_data_of_sentence_length=use_data_of_sentence_length)
     dnn_summarizer.set_supplier(dnn_vector_supplier)
+    dnn_summarizer.set_trained_model()
 
     lstm_summarizer = LSTMSummarizer()
     lstm_vector_supplier = LSTMVectorSupplier(genre,
@@ -36,6 +37,7 @@ def evaluate(genre='general',
                                   use_data_of_is_include_person=use_data_of_is_include_person,
                                   use_data_of_sentence_length=use_data_of_sentence_length)
     lstm_summarizer.set_supplier(lstm_vector_supplier)
+    lstm_summarizer.set_trained_model()
 
     test_ncodes = lstm_vector_supplier.test_ncodes
     total = len(test_ncodes)

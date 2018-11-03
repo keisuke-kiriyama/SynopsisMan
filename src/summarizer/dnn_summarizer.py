@@ -100,7 +100,6 @@ class DNNSummarizer:
 
 
         # 学習済みモデルに依る学習
-        self.set_trained_model()
         if self.trained_model is None:
             raise ValueError('[ERROR] trained model have not set yet')
         test_data_input = self.supplier.test_data_input(ncode)
