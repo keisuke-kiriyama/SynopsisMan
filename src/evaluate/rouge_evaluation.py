@@ -1,4 +1,7 @@
+import sys
+from rouge import Rouge
 from util.corpus_accessor import CorpusAccessor
+from util.text_processor import wakati
 from summarizer.lstm_summarizer import LSTMSummarizer
 from summarizer.dnn_summarizer import DNNSummarizer
 from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
@@ -42,25 +45,23 @@ def evaluate(genre='general',
     randoms_scores = []            # ランダムに文を選択
     dnn_scores = []                # DNNによるあらすじ
     lstm_scores = []               # LSTMによるあらすじ
+
+    sys.setrecursionlimit(20000)
+    rouge = Rouge()
     for i, ncode in enumerate(test_ncodes):
         ncode = 'n0013da'
         print('[INFO] processing ncode: ', ncode)
         print('[INFO] progress: {:.1f}%'.format(i / total * 100))
 
-        ref = ''.join(corpus_accessor.get_synopsis_lines(ncode))
-        opt = opt_synopsis.generate(ncode)
-        lead = lead_synopsis.generate(ncode)
-        random = random_synopsis.generate(ncode)
-        dnn_hyp = dnn_summarizer.generate(ncode)
-        lstm_hyp = lstm_summarizer.generate(ncode)
-
+        ref = wakati(''.join(corpus_accessor.get_synopsis_lines(ncode)))
+        opt = wakati(opt_synopsis.generate(ncode))
+        lead = wakati(lead_synopsis.generate(ncode))
+        random = wakati(random_synopsis.generate(ncode))
+        dnn_hyp = wakati(dnn_summarizer.generate(ncode))
+        lstm_hyp = wakati(lstm_summarizer.generate(ncode))
 
         print(ref)
         print(opt)
-        print(lead)
-        print(random)
-        print(dnn_hyp)
-        print(lstm_hyp)
 
         return
 
