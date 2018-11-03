@@ -156,5 +156,5 @@ if __name__ == '__main__':
                                   use_data_of_is_include_person=True,
                                   use_data_of_sentence_length=True)
     s.set_supplier(supplier)
-    print(s.generate('n0019bv'))
+    print(s.generate('n0013da'))
 
