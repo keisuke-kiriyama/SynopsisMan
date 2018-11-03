@@ -9,6 +9,7 @@ from summarizer.lstm_summarizer import LSTMSummarizer
 from summarizer.dnn_summarizer import DNNSummarizer
 from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
 from data_supplier.dnn_vector_supplier import DNNVectorSupplier
+from evaluate import rouge_evaluation
 
 @click.group()
 def cmd():
@@ -176,6 +177,29 @@ def lstm_summarizer_fit(genre,
                                   use_data_of_sentence_length=sentence_length)
     summarizer.set_supplier(supplier)
     summarizer.fit()
+
+@cmd.command()
+@click.option('--genre', '-g', default='general')
+@click.option('--importance', '-i', default='cos_sim')
+@click.option('--position', is_flag=True)
+@click.option('--serif', is_flag=True)
+@click.option('--person', is_flag=True)
+@click.option('--sentence_length', is_flag=True)
+def evaluate_rouge_score(genre,
+                         importance,
+                         position=False,
+                         serif=False,
+                         person=False,
+                         sentence_length=False):
+
+    rouge_evaluation.evaluate(genre,
+                              importance=importance,
+                              use_data_of_position_of_sentence=position,
+                              use_data_of_is_serif=serif,
+                              use_data_of_is_include_person=person,
+                              use_data_of_sentence_length=sentence_length)
+
+
 
 
 def main():

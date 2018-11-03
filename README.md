@@ -167,3 +167,12 @@ python main.py lstm_summarizer_fit -g general -i cos_sim --position --serif --pe
     - --person: is include person name 
     - --sentence_length: length of sentence
     
+## Evaluation
+### ROUGE
+
+- If you want to evaluate synopsis generation by rouge scocre, execute following command.
+```
+python main.py evaluate_rouge_score -g general -i cos_sim --position --serif --person --sentence_length
+```
+
+- Option is equal to fit option.

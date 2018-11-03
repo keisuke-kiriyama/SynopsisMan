@@ -9,7 +9,7 @@ from evaluate import random_synopsis
 
 corpus_accessor = CorpusAccessor()
 
-def evaluate(genre='sf',
+def evaluate(genre='general',
              importance='cos_sim',
              use_data_of_position_of_sentence=False,
              use_data_of_is_serif=False,
