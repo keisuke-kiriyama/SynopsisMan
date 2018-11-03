@@ -10,7 +10,7 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import Input, Embedding, LSTM, Dense
 from sklearn.metrics import mean_squared_error, precision_recall_curve, auc
 
-from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
+from data_supplier.dnn_vector_supplier import DNNVectorSupplier
 from util.corpus_accessor import CorpusAccessor
 from util.paths import DNN_TRAINED_MODEL_DIR_PATH, EMBEDDING_MATRIX_PATH
 
@@ -123,7 +123,7 @@ class DNNSummarizer:
 
 if __name__ == '__main__':
     s = DNNSummarizer()
-    supplier = LSTMVectorSupplier('general',
+    supplier = DNNVectorSupplier('general',
                                   'cos_sim',
                                   use_data_of_position_of_sentence=True,
                                   use_data_of_is_serif=True,
