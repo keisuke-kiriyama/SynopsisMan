@@ -115,18 +115,18 @@ class LSTMSummarizer:
             shuffle=True,
             callbacks=[early_stopping, checkpoint])
 
-    def generate_synopsis(self, ncode, short_rate, long_rate, min_sentence_count, max_sentence_count):
+    def generate(self, ncode):
         contents_lines = corpus_accessor.get_contents_lines(ncode)
-        if not contents_lines:
-            raise ValueError("[ERROR] ncode does not exist")
-        if not len(contents_lines) > max_sentence_count:
-            print("[ERROR] contents lines is too short to generate synopsis")
+        synopsis_lines = corpus_accessor.get_synopsis_lines(ncode)
+        if not contents_lines or not synopsis_lines:
+            return
 
         contents_lines = np.array(contents_lines)
-        contents_len = len(''.join(contents_lines))
+        # 参照あらすじの長さ
+        ref_length = len(''.join(synopsis_lines))
+        # 最低文数
+        min_sentence_count = 1
 
-        # 用いる要約率の閾値
-        rate = long_rate if corpus_accessor.is_long(ncode) else short_rate
 
         # 学習済みモデルに依る学習
         self.set_trained_model()
@@ -135,30 +135,26 @@ class LSTMSummarizer:
         test_data_input = self.supplier.test_data_input(ncode)
 
         prediction = self.trained_model.predict(test_data_input).T[0]
-        high_score_line_indexes = np.argsort(-prediction)[:max_sentence_count]
+        high_score_line_indexes = np.argsort(-prediction)
 
         # 要約率を満たすようにあらすじを作成
         synopsis = contents_lines[high_score_line_indexes[:min_sentence_count]]
         for sentence_index in high_score_line_indexes[min_sentence_count:]:
-            if len(''.join(np.append(synopsis, contents_lines[sentence_index]))) / contents_len < rate:
+            if len(''.join(np.append(synopsis, contents_lines[sentence_index]))) <= ref_length:
                 synopsis = np.append(synopsis, contents_lines[sentence_index])
             else:
                 break
-        synopsis = ''.join(synopsis)
-
-        return synopsis
-
-
-
+        return ''.join(synopsis)
 
 
 if __name__ == '__main__':
     s = LSTMSummarizer()
     supplier = LSTMVectorSupplier('general',
+                                  'cos_sim',
                                   use_data_of_position_of_sentence=True,
                                   use_data_of_is_serif=True,
                                   use_data_of_is_include_person=True,
                                   use_data_of_sentence_length=True)
     s.set_supplier(supplier)
-    print(s.generate_synopsis('n0019bv', 0.051, 0.013, 1, 6))
+    print(s.generate('n0019bv'))
 

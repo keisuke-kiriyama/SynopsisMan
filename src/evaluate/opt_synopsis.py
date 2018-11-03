@@ -5,7 +5,7 @@ from data_supplier import similarity_data_supplier
 
 corpus_accessor = CorpusAccessor()
 
-def generate_opt_synopsis(ncode):
+def generate(ncode):
     """
     正解データのスコアの大きい順に、参照あらすじと近い文字数のあらすじを生成する
     """
@@ -34,7 +34,7 @@ def generate_opt_synopsis(ncode):
     return ''.join(hyp)
 
 if __name__ == '__main__':
-    print(generate_opt_synopsis('n0013da'))
+    print(generate('n0013da'))
 
 
 
