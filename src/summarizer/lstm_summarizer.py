@@ -134,7 +134,7 @@ class LSTMSummarizer:
             raise ValueError('[ERROR] trained model have not set yet')
         test_data_input = self.supplier.test_data_input(ncode)
 
-        prediction = self.trained_model.predict(test_data_input).T[0]
+        prediction = np.array(self.trained_model.predict(test_data_input)[0].T[0])
         high_score_line_indexes = np.argsort(-prediction)
 
         # 要約率を満たすようにあらすじを作成
@@ -149,7 +149,7 @@ class LSTMSummarizer:
 
 if __name__ == '__main__':
     s = LSTMSummarizer()
-    supplier = LSTMVectorSupplier('general',
+    supplier = LSTMVectorSupplier('sf',
                                   'cos_sim',
                                   use_data_of_position_of_sentence=True,
                                   use_data_of_is_serif=True,

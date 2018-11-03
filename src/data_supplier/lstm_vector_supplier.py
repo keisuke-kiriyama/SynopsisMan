@@ -288,7 +288,7 @@ class LSTMVectorSupplier:
             word_index_data.append(word_index_sequence)
             multi_feature_data.append(multi_feature_vector)
 
-            return {'sequence': word_index_data, 'features': multi_feature_data}
+        return {'sequence': np.array(word_index_data), 'features': np.array(multi_feature_data)}
 
 
 
