@@ -58,7 +58,6 @@ def evaluate(genre='general',
     sys.setrecursionlimit(20000)
     rouge = Rouge()
     for i, ncode in enumerate(test_ncodes):
-        ncode = 'n0013da'
         print('[INFO] processing ncode: ', ncode)
         print('[INFO] progress: {:.1f}%'.format(i / total * 100))
 
