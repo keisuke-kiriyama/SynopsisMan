@@ -242,7 +242,7 @@ class LSTMVectorSupplier:
             raise ValueError('[ERROR]importance must be cos_soim or rouge')
         sentence_count = len(similarity_data)
 
-        if len(contents_lines) == sentence_count:
+        if not len(contents_lines) == sentence_count:
             raise ValueError('[ERROR] num of contents lines is not equal to similarity data count')
 
         data_of_position_of_sentence = None
