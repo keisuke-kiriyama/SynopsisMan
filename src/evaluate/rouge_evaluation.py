@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 from rouge import Rouge
 from util.corpus_accessor import CorpusAccessor
 from util.text_processor import wakati
@@ -40,11 +41,19 @@ def evaluate(genre='general',
     total = len(test_ncodes)
     print('[INFO] test ncodes count: ', total)
 
-    opt_scores = []               # 類似度上位から文選択(理論上の上限値)
-    lead_scores = []              # 文章の先頭からoptの文数分選択
-    randoms_scores = []            # ランダムに文を選択
-    dnn_scores = []                # DNNによるあらすじ
-    lstm_scores = []               # LSTMによるあらすじ
+    # ROUGE-1
+    opt_rouge_one_scores = []               # 類似度上位から文選択(理論上の上限値)
+    lead_rouge_one_scores = []              # 文章の先頭からoptの文数分選択
+    random_rouge_one_scores = []            # ランダムに文を選択
+    dnn_rouge_one_scores = []               # DNNによるあらすじ
+    lstm_rouge_one_scores = []              # LSTMによるあらすじ
+
+    # ROUGE-2
+    opt_rouge_two_scores = []               # 類似度上位から文選択(理論上の上限値)
+    lead_rouge_two_scores = []              # 文章の先頭からoptの文数分選択
+    random_rouge_two_scores = []            # ランダムに文を選択
+    dnn_rouge_two_scores = []               # DNNによるあらすじ
+    lstm_rouge_two_scores = []              # LSTMによるあらすじ
 
     sys.setrecursionlimit(20000)
     rouge = Rouge()
@@ -60,22 +69,40 @@ def evaluate(genre='general',
         dnn_hyp = wakati(dnn_summarizer.generate(ncode))
         lstm_hyp = wakati(lstm_summarizer.generate(ncode))
 
-        print(ref)
-        print(opt)
+        opt_score = rouge.get_scores(opt, ref, False)
+        lead_score = rouge.get_scores(lead, ref, False)
+        random_score = rouge.get_scores(random, ref, False)
+        dnn_score = rouge.get_scores(dnn_hyp, ref, False)
+        lstm_score = rouge.get_scores(lstm_hyp, ref, False)
 
-        return
+        opt_rouge_one_scores.append(opt_score['rouge-1']['r'])
+        lead_rouge_one_scores.append(lead_score['rouge-1']['r'])
+        random_rouge_one_scores.append(random_score['rouge-1']['r'])
+        dnn_rouge_one_scores.append(dnn_score['rouge-1']['r'])
+        lstm_rouge_one_scores.append(lstm_score['rouge-1']['r'])
 
+        opt_rouge_two_scores.append(opt_score['rouge-2']['r'])
+        lead_rouge_two_scores.append(lead_score['rouge-2']['r'])
+        random_rouge_two_scores.append(random_score['rouge-2']['r'])
+        dnn_rouge_two_scores.append(dnn_score['rouge-2']['r'])
+        lstm_rouge_two_scores.append(lstm_score['rouge-2']['r'])
 
+    print('[RESULT]')
+    print('ROUGE-1')
+    print('opt: {}'.format(np.average(opt_rouge_one_scores)))
+    print('lead: {}'.format(np.average(lead_rouge_one_scores)))
+    print('random: {}'.format(np.average(random_rouge_one_scores)))
+    print('dnn: {}'.format(np.average(dnn_rouge_one_scores)))
+    print('lstm: {}'.format(np.average(lstm_rouge_one_scores)))
+    print('\n')
 
-
-
-
-
-
-
-
-
-
+    print('ROUGE-2')
+    print('opt: {}'.format(np.average(opt_rouge_two_scores)))
+    print('lead: {}'.format(np.average(lead_rouge_two_scores)))
+    print('random: {}'.format(np.average(random_rouge_two_scores)))
+    print('dnn: {}'.format(np.average(dnn_rouge_two_scores)))
+    print('lstm: {}'.format(np.average(lstm_rouge_two_scores)))
+    print('\n')
 
 
 if __name__ == '__main__':
