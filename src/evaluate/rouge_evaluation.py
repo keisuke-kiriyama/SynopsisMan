@@ -88,7 +88,7 @@ def evaluate(genre='general',
         dnn_rouge_two_scores.append(dnn_score[0]['rouge-2']['r'])
         lstm_rouge_two_scores.append(lstm_score[0]['rouge-2']['r'])
 
-    print('[RESULT]')
+    print('[RESULT] genre: ', genre)
     print('ROUGE-1')
     print('opt: {}'.format(np.average(opt_rouge_one_scores)))
     print('lead: {}'.format(np.average(lead_rouge_one_scores)))
