@@ -5,7 +5,7 @@ FILE_PATH = path.abspath(__file__)
 UTIL_PATH = path.dirname(FILE_PATH)
 SRC_DIR_PATH = path.abspath(path.join(UTIL_PATH, pardir))
 PROJECT_ROOT = path.abspath(path.join(SRC_DIR_PATH, pardir))
-DATA_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'data'))
+DATA_DIR_PATH = os.environ['DATA_DIR_PATH']
 MODEL_DIR_PATH = path.abspath(path.join(PROJECT_ROOT, 'model'))
 
 ACTIVE_NCODES_DIR_PATH = path.abspath(path.join(DATA_DIR_PATH, 'active_ncodes'))
