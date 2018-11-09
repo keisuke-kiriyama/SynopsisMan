@@ -109,3 +109,6 @@ venv.bak/
 
 # Model
 /model/
+
+# shell script for TSUBAME
+/src/tsubame.sh
