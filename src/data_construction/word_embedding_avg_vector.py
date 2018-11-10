@@ -9,14 +9,15 @@ from util.paths import WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH, WORD_EMBEDDING_A
 
 data_accessor = CorpusAccessor()
 
-print('[INFO] loading word embedding model...')
-if os.path.isfile(WORD_EMBEDDING_MODEL_PATH):
-    word_embedding_model = word2vec.Word2Vec.load(WORD_EMBEDDING_MODEL_PATH)
-
 def convert_avg_vector(line):
     """
     文を文中の各単語の平均ベクトルに変換
     """
+    if os.path.isfile(WORD_EMBEDDING_MODEL_PATH):
+        print('[INFO] loading word embedding model...')
+        word_embedding_model = word2vec.Word2Vec.load(WORD_EMBEDDING_MODEL_PATH)
+    else:
+        raise ValueError("there is not word embedding model")
     wakati_line = text_processor.wakati(line).split()
     word_vectors = np.array([word_embedding_model.__dict__['wv'][word] for word in wakati_line])
     return np.average(word_vectors, axis=0)

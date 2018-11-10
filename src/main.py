@@ -1,5 +1,7 @@
 import click
 import time
+import os
+import re
 
 from util import paths
 import preprocess as p
@@ -21,6 +23,20 @@ def check_paths():
     設定されたPATHの確認
     """
     paths.check()
+
+@cmd.command()
+def remove_tsubame_log():
+    """
+    tsubameで実行時に作成されるログファイルを削除する
+    """
+    for file_name in os.listdir(paths.SRC_DIR_PATH):
+        splited = file_name.split('.')
+        if not len(splited) == 2: continue
+        pattern = '^[e,o]\d+'
+        if re.match(pattern, splited[1]):
+            file_path = os.path.join(paths.SRC_DIR_PATH, file_name)
+            print('remove: ', file_path)
+            os.remove(file_path)
 
 @cmd.command()
 def data_mkdir():
