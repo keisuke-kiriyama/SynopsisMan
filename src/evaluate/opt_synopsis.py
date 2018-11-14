@@ -1,11 +1,11 @@
 import numpy as np
 
 from util.corpus_accessor import CorpusAccessor
-from data_supplier import similarity_data_supplier
+from data_supplier import similarity_data_supplier, rouge_data_supplier
 
 corpus_accessor = CorpusAccessor()
 
-def generate(ncode):
+def generate(ncode, importance):
     """
     正解データのスコアの大きい順に、参照あらすじと近い文字数のあらすじを生成する
     """
@@ -21,7 +21,12 @@ def generate(ncode):
     min_sentence_count = 1
 
     # 類似度のデータ
-    similarity_data = similarity_data_supplier.load(ncode)
+    if importance == 'cos_sim':
+        similarity_data = similarity_data_supplier.load(ncode)
+    elif importance == 'rouge':
+        similarity_data = rouge_data_supplier.load(ncode)
+    else:
+        raise ValueError("importance is not correct")
     # 類似度を降順にソートしたインデックス
     sorted_score_line_indexes = np.argsort(-np.array(list(similarity_data.values())))
 
