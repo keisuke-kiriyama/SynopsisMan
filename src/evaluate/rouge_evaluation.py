@@ -69,7 +69,7 @@ def evaluate(genre='general',
         print('[INFO] progress: {:.1f}%'.format(i / total * 100))
 
         ref = wakati(ref)
-        opt = wakati(opt_synopsis.generate(ncode))
+        opt = wakati(opt_synopsis.generate(ncode, importance))
         lead = wakati(lead_synopsis.generate(ncode))
         random = wakati(random_synopsis.generate(ncode))
         dnn_hyp = wakati(dnn_summarizer.generate(ncode))
