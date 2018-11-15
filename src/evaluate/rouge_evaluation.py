@@ -59,11 +59,16 @@ def evaluate(genre='general',
 
     sys.setrecursionlimit(20000)
     rouge = Rouge()
+    summarization_rates = []
     for i, ncode in enumerate(test_ncodes):
+        contents = ''.join(corpus_accessor.get_contents_lines(ncode))
+        ref = ''.join(corpus_accessor.get_synopsis_lines(ncode))
+        summarization_rates.append(len(ref) / len(contents))
+
         print('[INFO] processing ncode: ', ncode)
         print('[INFO] progress: {:.1f}%'.format(i / total * 100))
 
-        ref = wakati(''.join(corpus_accessor.get_synopsis_lines(ncode)))
+        ref = wakati(ref)
         opt = wakati(opt_synopsis.generate(ncode))
         lead = wakati(lead_synopsis.generate(ncode))
         random = wakati(random_synopsis.generate(ncode))
@@ -104,6 +109,9 @@ def evaluate(genre='general',
     print('dnn: {}'.format(np.average(dnn_rouge_two_scores)))
     print('lstm: {}'.format(np.average(lstm_rouge_two_scores)))
     print('\n')
+
+    print('Summarization Rate')
+    print(np.average(summarization_rates))
 
 
 if __name__ == '__main__':

@@ -147,7 +147,7 @@ class LSTMVectorSupplier:
 
     def word_index_add_one(self, word):
         if not word in self.word_embedding_model.wv.vocab:
-            raise ValueError('[ERROR] word does not exist in vocabulary', word)
+            raise ValueError('[ERROR] word does not exist in vocabulary', wormd)
         return self.word_embedding_model.wv.vocab[word].index + 1
 
     def train_data_generator(self):
