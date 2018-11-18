@@ -33,6 +33,10 @@ class WordEmbeddingAvgVectorConstructor:
         [1: 文ベクトル, 2: 文ベクトル, ... , n: 文ベクトル]
         """
         print('[PROCESS NCODE]: {}'.format(ncode))
+        contents_file_path = os.path.join(WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH, ncode + '.txt')
+        if os.path.isfile(contents_file_path):
+            return
+
         contents_lines = self.data_accessor.get_contents_lines(ncode)
         synopsis_lines = self.data_accessor.get_synopsis_lines(ncode)
         if not contents_lines or not synopsis_lines:
@@ -46,21 +50,10 @@ class WordEmbeddingAvgVectorConstructor:
             vector = self.convert_avg_vector(line)
             contents_line_vectors[line_idx] = vector
 
-        # あらすじ文のベクトル化
-        synopsis_line_vectors = dict()
-        for line_idx, line in enumerate(synopsis_lines):
-            print('synopsis progress: {:.1f}%'.format(line_idx / len(contents_lines) * 100))
-            vector = self.convert_avg_vector(line)
-            synopsis_line_vectors[line_idx] = vector
-
         # データの保存
-        contents_file_path = os.path.join(WORD_EMBEDDING_AVG_VECTOR_CONTENTS_PATH, ncode + '.txt')
-        synopsis_file_path = os.path.join(WORD_EMBEDDING_AVG_VECTOR_META_PATH, ncode + '.txt')
         print('[INFO] saving data: {}'.format(ncode))
         with open(contents_file_path, 'wb') as cf:
             joblib.dump(contents_line_vectors, cf, compress=3)
-        with open(synopsis_file_path, 'wb') as sf:
-            joblib.dump(synopsis_line_vectors, sf, compress=3)
 
     def construct(self):
         for i, ncode in enumerate(self.data_accessor.ncodes):
