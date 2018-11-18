@@ -65,6 +65,10 @@ python main.py word_embedding --refresh
 ```
 python main.py test_word_embedding -w 部屋
 ```
+- When embedding model has constructed, execute following command
+```
+python main.py construct_embedding_matrix
+``` 
 
 ## Training data construction
 
@@ -79,11 +83,6 @@ python main.py construct_similarity_data
 ```
 python main.py construct_rouge_similarity_data
 ```
-
-- When embedding model has constructed, execute following command
-```
-python main.py construct_embedding_matrix
-``` 
 
 ### Position of sentence
 - Execute following command, then data of position of sentence is constructed.
