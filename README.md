@@ -88,6 +88,7 @@ python main.py construct_rouge_similarity_data
 - Execute following command, then average of word embedding vectors data is constructed.	
 ```	
 python main.py construct_word_embedding_avg_vector	
+```
 
 
 ### Position of sentence
