@@ -62,34 +62,31 @@ class LSTMSummarizer:
         vocabulary_size = self.supplier.vocabulary_size
         embedding_vector_dim = self.supplier.word_embedding_vector_dim
 
-        with tf.device('/cpu:0'):
-            main_input = Input(shape=(max_count_of_words,), dtype='int32', name='sequence')
-            x = Embedding(input_dim=vocabulary_size + 1,
-                          output_dim=embedding_vector_dim,
-                          input_length=max_count_of_words,
-                          weights=[embedding_matrix],
-                          trainable=False,
-                          mask_zero=True,
-                          name='embedding')(main_input)
-            lstm_out = LSTM(64, input_shape=(self.supplier.word_index_batch_shape))(x)
+        main_input = Input(shape=(max_count_of_words,), dtype='int32', name='sequence')
+        x = Embedding(input_dim=vocabulary_size + 1,
+                      output_dim=embedding_vector_dim,
+                      input_length=max_count_of_words,
+                      weights=[embedding_matrix],
+                      trainable=False,
+                      mask_zero=True,
+                      name='embedding')(main_input)
+        lstm_out = LSTM(64, input_shape=(self.supplier.word_index_batch_shape))(x)
 
-            # 文をエンコードするLSTMを訓練するための補助出力
-            auxiliary_output = Dense(1, activation='linear', name='aux_output')(lstm_out)
+        # 文をエンコードするLSTMを訓練するための補助出力
+        auxiliary_output = Dense(1, activation='linear', name='aux_output')(lstm_out)
 
-            features_input = Input(shape=(self.supplier.multi_feature_dim,), name='features')
-            x = keras.layers.concatenate([lstm_out, features_input])
+        features_input = Input(shape=(self.supplier.multi_feature_dim,), name='features')
+        x = keras.layers.concatenate([lstm_out, features_input])
 
-            x = Dense(800, activation=self.activation)(x)
-            x = BatchNormalization()(x)
-            x = Dropout(.3)(x)
-            x = Dense(800, activation=self.activation)(x)
-            x = BatchNormalization()(x)
-            x = Dropout(.3)(x)
+        x = Dense(800, activation=self.activation)(x)
+        x = BatchNormalization()(x)
+        x = Dropout(.3)(x)
+        x = Dense(800, activation=self.activation)(x)
+        x = BatchNormalization()(x)
+        x = Dropout(.3)(x)
 
-            main_output = Dense(1, activation='linear', name='main_output')(x)
-            model = Model(inputs=[main_input, features_input], outputs=[main_output, auxiliary_output])
-
-        model = multi_gpu_model(model, 4)
+        main_output = Dense(1, activation='linear', name='main_output')(x)
+        model = Model(inputs=[main_input, features_input], outputs=[main_output, auxiliary_output])
 
         model.compile(loss='mean_squared_error',
                       optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999),
