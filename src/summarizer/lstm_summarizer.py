@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import joblib
+import tensorflow as tf
 import keras
 from keras.models import Sequential, load_model, Model
 from keras.layers.core import Dense, Activation, Dropout
@@ -8,6 +9,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import Input, Embedding, LSTM, Dense
+from keras.utils.training_utils import multi_gpu_model
 from sklearn.metrics import mean_squared_error, precision_recall_curve, auc
 
 from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
@@ -60,31 +62,34 @@ class LSTMSummarizer:
         vocabulary_size = self.supplier.vocabulary_size
         embedding_vector_dim = self.supplier.word_embedding_vector_dim
 
-        main_input = Input(shape=(max_count_of_words,), dtype='int32', name='sequence')
-        x = Embedding(input_dim=vocabulary_size + 1,
-                      output_dim=embedding_vector_dim,
-                      input_length=max_count_of_words,
-                      weights=[embedding_matrix],
-                      trainable=False,
-                      mask_zero=True,
-                      name='embedding')(main_input)
-        lstm_out = LSTM(64, input_shape=(self.supplier.word_index_batch_shape))(x)
+        with tf.device('/cpu:0'):
+            main_input = Input(shape=(max_count_of_words,), dtype='int32', name='sequence')
+            x = Embedding(input_dim=vocabulary_size + 1,
+                          output_dim=embedding_vector_dim,
+                          input_length=max_count_of_words,
+                          weights=[embedding_matrix],
+                          trainable=False,
+                          mask_zero=True,
+                          name='embedding')(main_input)
+            lstm_out = LSTM(64, input_shape=(self.supplier.word_index_batch_shape))(x)
 
-        # 文をエンコードするLSTMを訓練するための補助出力
-        auxiliary_output = Dense(1, activation='linear', name='aux_output')(lstm_out)
+            # 文をエンコードするLSTMを訓練するための補助出力
+            auxiliary_output = Dense(1, activation='linear', name='aux_output')(lstm_out)
 
-        features_input = Input(shape=(self.supplier.multi_feature_dim,), name='features')
-        x = keras.layers.concatenate([lstm_out, features_input])
+            features_input = Input(shape=(self.supplier.multi_feature_dim,), name='features')
+            x = keras.layers.concatenate([lstm_out, features_input])
 
-        x = Dense(800, activation=self.activation)(x)
-        x = BatchNormalization()(x)
-        x = Dropout(.3)(x)
-        x = Dense(800, activation=self.activation)(x)
-        x = BatchNormalization()(x)
-        x = Dropout(.3)(x)
+            x = Dense(800, activation=self.activation)(x)
+            x = BatchNormalization()(x)
+            x = Dropout(.3)(x)
+            x = Dense(800, activation=self.activation)(x)
+            x = BatchNormalization()(x)
+            x = Dropout(.3)(x)
 
-        main_output = Dense(1, activation='linear', name='main_output')(x)
-        model = Model(inputs=[main_input, features_input], outputs=[main_output, auxiliary_output])
+            main_output = Dense(1, activation='linear', name='main_output')(x)
+            model = Model(inputs=[main_input, features_input], outputs=[main_output, auxiliary_output])
+
+        model = multi_gpu_model(model, 4)
 
         model.compile(loss='mean_squared_error',
                       optimizer=Adam(lr=0.01, beta_1=0.9, beta_2=0.999),
