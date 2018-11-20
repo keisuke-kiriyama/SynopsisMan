@@ -8,3 +8,4 @@ from . import rouge_data_supplier
 from . import word_embedding_avg_vector_data_supplier
 from . import lstm_vector_supplier
 from . import dnn_vector_supplier
+from . import word_indexes_supplier
