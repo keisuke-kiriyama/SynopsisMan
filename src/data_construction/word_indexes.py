@@ -44,8 +44,11 @@ class WordIndexesConstructor():
                 print('contents progress: {:.1f}%'.format(line_idx / len(contents_lines) * 100))
             index_list = self.convert_index_list(line)
             index_data[line_idx] = index_list
-        print(index_data)
 
+        # データの保存
+        print('[INFO] saving data: {}'.format(ncode))
+        with open(contents_file_path, 'wb') as cf:
+            joblib.dump(index_data, cf, compress=3)
 
     def construct(self):
         """

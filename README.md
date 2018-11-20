@@ -90,6 +90,11 @@ python main.py construct_rouge_similarity_data
 python main.py construct_word_embedding_avg_vector	
 ```
 
+### Word index data
+- Execute following command, then word index data is constructed.
+```
+python main.py construct_word_indexes
+```
 
 ### Position of sentence
 - Execute following command, then data of position of sentence is constructed.
