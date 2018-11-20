@@ -91,6 +91,13 @@ def construct_word_embedding_avg_vector():
     data_construction.word_embedding_avg_vector.construct()
 
 @cmd.command()
+def construct_word_indexes():
+    """
+    文中の単語のインデックスを要素とするリストのデータを構築する
+    """
+    data_construction.word_indexes.construct()
+
+@cmd.command()
 def construct_similarity_data():
     """
     本文中の各文とあらすじ文各文の類似度のデータを構築する
