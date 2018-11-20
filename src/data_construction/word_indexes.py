@@ -17,7 +17,7 @@ class WordIndexesConstructor():
     def convert_index_list(self, line):
         if self.word_embedding_model is None:
             raise ValueError("there is not word embedding model")
-        words = text_processor.wakati(line)
+        words = text_processor.wakati(line).split()
         index_list = [self.word_embedding_model.wv.vocab[word].index + 1 for word in words]
         print(index_list)
         return index_list
@@ -44,6 +44,7 @@ class WordIndexesConstructor():
             if line_idx % 50 == 0:
                 print('contents progress: {:.1f}%'.format(line_idx / len(contents_lines) * 100))
             index_list = self.convert_index_list(line)
+            index_data[line_idx] = index_list
 
 
     def construct(self):
