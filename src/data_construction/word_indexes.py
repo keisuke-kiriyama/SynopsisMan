@@ -18,7 +18,9 @@ class WordIndexesConstructor():
         if self.word_embedding_model is None:
             raise ValueError("there is not word embedding model")
         words = text_processor.wakati(line)
-        print(words)
+        index_list = [self.word_embedding_model.wv.vocab[word].index + 1 for word in words]
+        print(index_list)
+        return index_list
 
 
     def sentence_to_word_indexes(self, ncode):
