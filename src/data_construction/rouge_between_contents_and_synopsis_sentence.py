@@ -18,8 +18,8 @@ def rouge_between_contents_and_synopsis_sentence(ncode):
     """
     print('[PROCESS NCODE]: {}'.format(ncode))
     file_path = os.path.join(ROUGE_BETWEEN_CONTENTS_AND_SYNOPSIS_SENTENCE_DIR_PATH, ncode + '.txt')
-    # if os.path.isfile(file_path):
-    #     return
+    if os.path.isfile(file_path):
+        return
     contents_lines = corpus_accessor.get_contents_lines(ncode)
     synopsis_lines = corpus_accessor.get_synopsis_lines(ncode)
     if not contents_lines or not synopsis_lines:
