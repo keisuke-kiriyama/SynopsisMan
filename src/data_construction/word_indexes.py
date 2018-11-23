@@ -30,8 +30,8 @@ class WordIndexesConstructor():
         """
         print('[PROCESS NCODE]: {}'.format(ncode))
         contents_file_path = os.path.join(WORD_INDEXES_CONTENTS_PATH, ncode + '.txt')
-        # if os.path.isfile(contents_file_path):
-        #     return
+        if os.path.isfile(contents_file_path):
+            return
 
         contents_lines = self.data_accessor.get_contents_lines(ncode)
         synopsis_lines = self.data_accessor.get_synopsis_lines(ncode)
@@ -45,12 +45,10 @@ class WordIndexesConstructor():
             index_list = self.convert_index_list(line)
             index_data[line_idx] = index_list
 
-        print(index_data)
-
         # データの保存
-        # print('[INFO] saving data: {}'.format(ncode))
-        # with open(contents_file_path, 'wb') as cf:
-        #     joblib.dump(index_data, cf, compress=3)
+        print('[INFO] saving data: {}'.format(ncode))
+        with open(contents_file_path, 'wb') as cf:
+            joblib.dump(index_data, cf, compress=3)
 
     def construct(self):
         """

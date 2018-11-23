@@ -197,7 +197,7 @@ class LSTMVectorSupplier:
 
                 for index in range(sentence_count):
                     # 文中の単語インデックスの系列ベクトル構築
-                    word_index_sequence = np.zeros(self.max_count_of_words, dtype='int32')
+                    word_index_sequence = np.zeros(self.max_count_of_words)
                     word_indexes = data_of_word_indexes[index]
                     word_indexes_length = min(len(word_indexes), self.max_count_of_words)
                     word_index_sequence[0: word_indexes_length] = word_indexes
@@ -245,6 +245,7 @@ class LSTMVectorSupplier:
         if not len(contents_lines) == sentence_count:
             raise ValueError('[ERROR] num of contents lines is not equal to similarity data count')
 
+        data_of_word_indexes = data_supplier.word_indexes_supplier.load(ncode)
         data_of_position_of_sentence = None
         data_of_is_serif = None
         data_of_is_include_person = None
@@ -264,11 +265,10 @@ class LSTMVectorSupplier:
 
         for index in range(sentence_count):
             # 文中の単語インデックスの系列ベクトル構築
-            word_index_sequence = np.zeros(self.max_count_of_words, dtype='int32')
-            words = text_processor.wakati(contents_lines[index]).split()
-            for i, word in enumerate(words):
-                if i == self.max_count_of_words: break
-                word_index_sequence[i] = self.word_index_add_one(word)
+            word_index_sequence = np.zeros(self.max_count_of_words)
+            word_indexes = data_of_word_indexes[index]
+            word_indexes_length = min(len(word_indexes), self.max_count_of_words)
+            word_index_sequence[0: word_indexes_length] = word_indexes
 
             # 追加の素性ベクトルの構築
             multi_feature_vector = []
