@@ -1,18 +1,14 @@
 import os
 import numpy as np
-import joblib
-import keras
-from keras.models import Sequential, load_model, Model
-from keras.layers.core import Dense, Activation, Dropout
+from keras.models import Sequential, load_model
+from keras.layers.core import Activation, Dropout
 from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.layers import Input, Embedding, LSTM, Dense
-from sklearn.metrics import mean_squared_error, precision_recall_curve, auc
+from keras.layers import Dense
 
 from data_supplier.dnn_vector_supplier import DNNVectorSupplier
 from util.corpus_accessor import CorpusAccessor
-from util.paths import DNN_TRAINED_MODEL_DIR_PATH, EMBEDDING_MATRIX_PATH
 
 
 corpus_accessor = CorpusAccessor()
@@ -65,7 +61,6 @@ class DNNSummarizer:
     def fit(self):
         """
         Feed Foward Neural Netを用いた訓練
-        :return:
         """
         if self.supplier is None:
             raise ValueError("[ERROR] vector supplier haven't set yet")
@@ -79,6 +74,36 @@ class DNNSummarizer:
                                      save_best_only=True)
         model.fit_generator(
             self.supplier.train_data_generator(),
+            steps_per_epoch=self.supplier.train_steps_per_epoch(),
+            validation_data=self.supplier.validation_data_generator(),
+            validation_steps=self.supplier.validation_steps_per_epoch(),
+            epochs=epochs,
+            shuffle=True,
+            callbacks=[early_stopping, checkpoint])
+
+    def re_fit(self, model_name):
+        """
+        モデルの再学習
+        """
+        trained_model_file_path = os.path.join(self.supplier.trained_model_dir_path(), model_name)
+        if not os.path.isfile(trained_model_file_path):
+            raise ValueError("[ERROR] trained model does not exist")
+
+        trained_model = load_model(trained_model_file_path)
+        initial_epoch = int(model_name.split('_')[1]) + 1
+        epochs = 100 - initial_epoch
+
+        early_stopping = EarlyStopping(monitor='val_loss',
+                                       patience=10)
+        checkpoint = ModelCheckpoint(filepath=os.path.join(self.supplier.trained_model_dir_path(),
+                                                           'model_{epoch:02d}_vloss{val_loss:.4f}.hdf5'),
+                                     save_best_only=True)
+
+        print('[INFO] trained model path: {}'.format(trained_model_file_path))
+        print('[INFO] initial_epoch: {}'.format(initial_epoch))
+        trained_model.fit_generator(
+            self.supplier.train_data_generator(),
+            initial_epoch=initial_epoch,
             steps_per_epoch=self.supplier.train_steps_per_epoch(),
             validation_data=self.supplier.validation_data_generator(),
             validation_steps=self.supplier.validation_steps_per_epoch(),

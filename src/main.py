@@ -204,6 +204,58 @@ def lstm_summarizer_fit(genre,
 @cmd.command()
 @click.option('--genre', '-g', default='general')
 @click.option('--importance', '-i', default='cos_sim')
+@click.option('--model_name', '-m')
+@click.option('--position', is_flag=True)
+@click.option('--serif', is_flag=True)
+@click.option('--person', is_flag=True)
+@click.option('--sentence_length', is_flag=True)
+def dnn_summarizer_re_fit(genre,
+                        importance,
+                        model_name='',
+                        position=False,
+                        serif=False,
+                        person=False,
+                        sentence_length=False):
+    summarizer = DNNSummarizer()
+    supplier = DNNVectorSupplier(genre,
+                                  importance=importance,
+                                  use_data_of_position_of_sentence=position,
+                                  use_data_of_is_serif=serif,
+                                  use_data_of_is_include_person=person,
+                                  use_data_of_sentence_length=sentence_length)
+
+    summarizer.set_supplier(supplier)
+    summarizer.re_fit(model_name)
+
+@cmd.command()
+@click.option('--genre', '-g', default='general')
+@click.option('--importance', '-i', default='cos_sim')
+@click.option('--model_name', '-m')
+@click.option('--position', is_flag=True)
+@click.option('--serif', is_flag=True)
+@click.option('--person', is_flag=True)
+@click.option('--sentence_length', is_flag=True)
+def lstm_summarizer_re_fit(genre,
+                        importance,
+                        model_name='',
+                        position=False,
+                        serif=False,
+                        person=False,
+                        sentence_length=False):
+    summarizer = LSTMSummarizer()
+    supplier = LSTMVectorSupplier(genre,
+                                  importance=importance,
+                                  use_data_of_position_of_sentence=position,
+                                  use_data_of_is_serif=serif,
+                                  use_data_of_is_include_person=person,
+                                  use_data_of_sentence_length=sentence_length)
+
+    summarizer.set_supplier(supplier)
+    summarizer.re_fit(model_name)
+
+@cmd.command()
+@click.option('--genre', '-g', default='general')
+@click.option('--importance', '-i', default='cos_sim')
 @click.option('--position', is_flag=True)
 @click.option('--serif', is_flag=True)
 @click.option('--person', is_flag=True)

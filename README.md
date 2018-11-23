@@ -157,9 +157,17 @@ python main.py construct_active_ncodes_data --threshold 0.3
 ```
 python main.py dnn_summarizer_fit -g general -i cos_sim --position --serif --person --sentence_length
 ```
+- refit
+```
+python main.py dnn_summarizer_fit -g general -i cos_sim -m model_01_vloss0.0091.hdf5 --position --serif --person --sentence_length
+```
 #### LSTM
 ```
 python main.py lstm_summarizer_fit -g general -i cos_sim --position --serif --person --sentence_length
+```
+- refit
+```
+python main.py lstm_summarizer_fit -g general -i cos_sim -m model_01_vloss0.0091.hdf5 --position --serif --person --sentence_length
 ```
 
 #### option
