@@ -199,10 +199,10 @@ class LSTMVectorSupplier:
                     # 文中の単語インデックスの系列ベクトル構築
                     word_index_sequence = np.zeros(self.max_count_of_words)
                     word_indexes = data_of_word_indexes[index]
-                    print(word_indexes)
-                    print('\n')
                     word_indexes_length = min(len(word_indexes), self.max_count_of_words)
                     word_index_sequence[0: word_indexes_length] = word_indexes
+                    print(word_index_sequence)
+                    print('\n')
 
                     # 追加の素性ベクトルの構築
                     multi_feature_vector = []
