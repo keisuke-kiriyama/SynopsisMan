@@ -126,7 +126,7 @@ class LSTMSummarizer:
             raise ValueError("[ERROR] trained model does not exist")
 
         trained_model = load_model(trained_model_file_path)
-        initial_epoch = int(model_name.split('_')[1]) + 1
+        initial_epoch = int(model_name.split('_')[1])
         epochs = 100 - initial_epoch
 
         early_stopping = EarlyStopping(monitor='val_loss',

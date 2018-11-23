@@ -159,7 +159,7 @@ python main.py dnn_summarizer_fit -g general -i cos_sim --position --serif --per
 ```
 - refit
 ```
-python main.py dnn_summarizer_fit -g general -i cos_sim -m model_01_vloss0.0091.hdf5 --position --serif --person --sentence_length
+python main.py dnn_summarizer_re_fit -g general -i cos_sim -m model_01_vloss0.0091.hdf5 --position --serif --person --sentence_length
 ```
 #### LSTM
 ```
@@ -167,7 +167,7 @@ python main.py lstm_summarizer_fit -g general -i cos_sim --position --serif --pe
 ```
 - refit
 ```
-python main.py lstm_summarizer_fit -g general -i cos_sim -m model_01_vloss0.0091.hdf5 --position --serif --person --sentence_length
+python main.py lstm_summarizer_re_fit -g general -i cos_sim -m model_01_vloss0.0091.hdf5 --position --serif --person --sentence_length
 ```
 
 #### option
