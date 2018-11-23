@@ -301,7 +301,7 @@ if __name__ == '__main__':
                              use_data_of_sentence_length=True)
     gen = sup.train_data_generator()
     for i in range(5):
-        print(next(gen)['sequence'][0])
+        print(next(gen)['sequence'])
         print('\n')
 
 
