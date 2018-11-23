@@ -30,8 +30,8 @@ class WordIndexesConstructor():
         """
         print('[PROCESS NCODE]: {}'.format(ncode))
         contents_file_path = os.path.join(WORD_INDEXES_CONTENTS_PATH, ncode + '.txt')
-        if os.path.isfile(contents_file_path):
-            return
+        # if os.path.isfile(contents_file_path):
+        #     return
 
         contents_lines = self.data_accessor.get_contents_lines(ncode)
         synopsis_lines = self.data_accessor.get_synopsis_lines(ncode)
