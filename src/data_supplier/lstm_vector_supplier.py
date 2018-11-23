@@ -73,7 +73,7 @@ class LSTMVectorSupplier:
         # Num of sentences used per batch
         self.batch_size = 50
         # Max num of words in sentence
-        self.max_count_of_words = 200
+        self.max_count_of_words = 70
         # Shape of per batch
         self.word_index_batch_shape = (self.batch_size, self.max_count_of_words)
         # Shape of multi features vector
