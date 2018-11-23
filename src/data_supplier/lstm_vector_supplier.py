@@ -197,8 +197,8 @@ class LSTMVectorSupplier:
 
                 for index in range(sentence_count):
                     # 文中の単語インデックスの系列ベクトル構築
-                    word_index_sequence = np.zeros(self.max_count_of_words)
-                    word_indexes = data_of_word_indexes[index]
+                    word_index_sequence = np.zeros(self.max_count_of_words, dtype=int)
+                    word_indexes = np.array(data_of_word_indexes[index])
                     print('a')
                     print(word_indexes)
                     word_indexes_length = min(len(word_indexes), self.max_count_of_words)
