@@ -199,6 +199,8 @@ class LSTMVectorSupplier:
                     # 文中の単語インデックスの系列ベクトル構築
                     word_index_sequence = np.zeros(self.max_count_of_words)
                     word_indexes = data_of_word_indexes[index]
+                    print(word_indexes)
+                    print('\n')
                     word_indexes_length = min(len(word_indexes), self.max_count_of_words)
                     word_index_sequence[0: word_indexes_length] = word_indexes
 
@@ -302,8 +304,6 @@ if __name__ == '__main__':
     gen = sup.train_data_generator()
     for i in range(5):
         data = next(gen)
-        print(data[0]['sequence'][0])
-        print('\n')
 
 
 
