@@ -302,7 +302,7 @@ if __name__ == '__main__':
     gen = sup.train_data_generator()
     for i in range(5):
         data = next(gen)
-        print(data[0]['sequence'])
+        print(data[0]['sequence'][0])
         print('\n')
 
 
