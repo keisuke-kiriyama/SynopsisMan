@@ -10,10 +10,11 @@ pip install -r requirements.txt
 ```
 export NEOLOGD_PATH=/usr/local/lib/mecab/dic/mecab-ipadic-neologd
 ```
-- You need to set data directory path
-- following command is example
+- You need to set data directory path and model directory path.
+- following command is example.
 ```
 export DATA_DIR_PATH=~/src/SynopsisMan/data
+export MODEL_DIR_PATH=~/src/SynopsisMan/model
 ```
 
 ## Check setting path
