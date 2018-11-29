@@ -303,11 +303,13 @@ if __name__ == '__main__':
     print('train')
     for i in range(5):
         data = next(gen)
+        print(data)
 
     print('validate')
     gen = sup.validation_data_generator()
     for i in range(5):
         data = next(gen)
+        print(data)
 
 
 
