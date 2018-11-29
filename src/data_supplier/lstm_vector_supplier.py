@@ -300,6 +300,12 @@ if __name__ == '__main__':
                              use_data_of_is_include_person=True,
                              use_data_of_sentence_length=True)
     gen = sup.train_data_generator()
+    print('train')
+    for i in range(5):
+        data = next(gen)
+
+    print('validate')
+    gen = sup.validation_data_generator()
     for i in range(5):
         data = next(gen)
 
