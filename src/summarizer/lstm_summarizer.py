@@ -107,7 +107,7 @@ class LSTMSummarizer:
                                        patience=10)
         checkpoint = ModelCheckpoint(filepath=os.path.join(self.supplier.trained_model_dir_path(),
                                                            'model_{epoch:02d}_vloss{val_loss:.4f}.hdf5'),
-                                     save_best_only=True)
+                                     save_best_only=False)
         model.fit_generator(
             self.supplier.train_data_generator(),
             steps_per_epoch=self.supplier.train_steps_per_epoch(),
@@ -166,7 +166,6 @@ class LSTMSummarizer:
         test_data_input = self.supplier.test_data_input(ncode)
 
         prediction = np.array(self.trained_model.predict(test_data_input)[0].T[0])
-        print(prediction)
         high_score_line_indexes = np.argsort(-prediction)
 
         # 要約率を満たすようにあらすじを作成
