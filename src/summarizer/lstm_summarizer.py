@@ -78,10 +78,10 @@ class LSTMSummarizer:
         features_input = Input(shape=(self.supplier.multi_feature_dim,), name='features')
         x = keras.layers.concatenate([lstm_out, features_input])
 
-        x = Dense(800, activation=self.activation)(x)
+        x = Dense(100, activation=self.activation)(x)
         x = BatchNormalization()(x)
         x = Dropout(.3)(x)
-        x = Dense(800, activation=self.activation)(x)
+        x = Dense(100, activation=self.activation)(x)
         x = BatchNormalization()(x)
         x = Dropout(.3)(x)
 
