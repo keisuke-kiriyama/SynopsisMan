@@ -166,6 +166,7 @@ class LSTMSummarizer:
         test_data_input = self.supplier.test_data_input(ncode)
 
         prediction = np.array(self.trained_model.predict(test_data_input)[0].T[0])
+        print(prediction)
         high_score_line_indexes = np.argsort(-prediction)
 
         # 要約率を満たすようにあらすじを作成
@@ -187,5 +188,6 @@ if __name__ == '__main__':
                                   use_data_of_is_include_person=True,
                                   use_data_of_sentence_length=True)
     s.set_supplier(supplier)
-    print(s.generate('n0002ei'))
+    s.set_trained_model()
+    s.generate('n0002ei')
 
