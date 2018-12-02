@@ -54,7 +54,7 @@ def construct():
     """
     sys.setrecursionlimit(100000)
     for i, ncode in enumerate(corpus_accessor.ncodes[228300:]):
-        print('[INFO] num of constructed data: {}'.format(i))
+        print('[INFO] num of constructed data: {}'.format(i + 228300))
         rouge_between_contents_and_synopsis_sentence(ncode)
 
 if __name__ == '__main__':
