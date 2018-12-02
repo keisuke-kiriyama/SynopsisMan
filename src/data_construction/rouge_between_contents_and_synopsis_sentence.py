@@ -52,7 +52,7 @@ def construct():
     """
     全小説のデータを構築する
     """
-    sys.setrecursionlimit(40000)
+    sys.setrecursionlimit(100000)
     for i, ncode in enumerate(corpus_accessor.ncodes[228300:]):
         print('[INFO] num of constructed data: {}'.format(i))
         rouge_between_contents_and_synopsis_sentence(ncode)
