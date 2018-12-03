@@ -29,15 +29,15 @@ def evaluate(genre='general',
     dnn_summarizer.set_supplier(dnn_vector_supplier)
     dnn_summarizer.set_trained_model()
 
-    # lstm_summarizer = LSTMSummarizer()
-    # lstm_vector_supplier = LSTMVectorSupplier(genre,
-    #                               importance,
-    #                               use_data_of_position_of_sentence=use_data_of_position_of_sentence,
-    #                               use_data_of_is_serif=use_data_of_is_serif,
-    #                               use_data_of_is_include_person=use_data_of_is_include_person,
-    #                               use_data_of_sentence_length=use_data_of_sentence_length)
-    # lstm_summarizer.set_supplier(lstm_vector_supplier)
-    # lstm_summarizer.set_trained_model()
+    lstm_summarizer = LSTMSummarizer()
+    lstm_vector_supplier = LSTMVectorSupplier(genre,
+                                  importance,
+                                  use_data_of_position_of_sentence=use_data_of_position_of_sentence,
+                                  use_data_of_is_serif=use_data_of_is_serif,
+                                  use_data_of_is_include_person=use_data_of_is_include_person,
+                                  use_data_of_sentence_length=use_data_of_sentence_length)
+    lstm_summarizer.set_supplier(lstm_vector_supplier)
+    lstm_summarizer.set_trained_model()
 
     test_ncodes = dnn_vector_supplier.test_ncodes
     total = len(test_ncodes)
@@ -73,25 +73,25 @@ def evaluate(genre='general',
         lead = wakati(lead_synopsis.generate(ncode))
         random = wakati(random_synopsis.generate(ncode))
         dnn_hyp = wakati(dnn_summarizer.generate(ncode))
-        # lstm_hyp = wakati(lstm_summarizer.generate(ncode))
+        lstm_hyp = wakati(lstm_summarizer.generate(ncode))
 
         opt_score = rouge.get_scores(opt, ref, False)
         lead_score = rouge.get_scores(lead, ref, False)
         random_score = rouge.get_scores(random, ref, False)
         dnn_score = rouge.get_scores(dnn_hyp, ref, False)
-        # lstm_score = rouge.get_scores(lstm_hyp, ref, False)
+        lstm_score = rouge.get_scores(lstm_hyp, ref, False)
 
         opt_rouge_one_scores.append(opt_score[0]['rouge-1']['r'])
         lead_rouge_one_scores.append(lead_score[0]['rouge-1']['r'])
         random_rouge_one_scores.append(random_score[0]['rouge-1']['r'])
         dnn_rouge_one_scores.append(dnn_score[0]['rouge-1']['r'])
-        # lstm_rouge_one_scores.append(lstm_score[0]['rouge-1']['r'])
+        lstm_rouge_one_scores.append(lstm_score[0]['rouge-1']['r'])
 
         opt_rouge_two_scores.append(opt_score[0]['rouge-2']['r'])
         lead_rouge_two_scores.append(lead_score[0]['rouge-2']['r'])
         random_rouge_two_scores.append(random_score[0]['rouge-2']['r'])
         dnn_rouge_two_scores.append(dnn_score[0]['rouge-2']['r'])
-        # lstm_rouge_two_scores.append(lstm_score[0]['rouge-2']['r'])
+        lstm_rouge_two_scores.append(lstm_score[0]['rouge-2']['r'])
 
     print('[RESULT] genre: ', genre)
     print('ROUGE-1')
@@ -99,7 +99,7 @@ def evaluate(genre='general',
     print('lead: {}'.format(np.average(lead_rouge_one_scores)))
     print('random: {}'.format(np.average(random_rouge_one_scores)))
     print('dnn: {}'.format(np.average(dnn_rouge_one_scores)))
-    # print('lstm: {}'.format(np.average(lstm_rouge_one_scores)))
+    print('lstm: {}'.format(np.average(lstm_rouge_one_scores)))
     print('\n')
 
     print('ROUGE-2')
@@ -107,7 +107,7 @@ def evaluate(genre='general',
     print('lead: {}'.format(np.average(lead_rouge_two_scores)))
     print('random: {}'.format(np.average(random_rouge_two_scores)))
     print('dnn: {}'.format(np.average(dnn_rouge_two_scores)))
-    # print('lstm: {}'.format(np.average(lstm_rouge_two_scores)))
+    print('lstm: {}'.format(np.average(lstm_rouge_two_scores)))
     print('\n')
 
     print('Summarization Rate')
