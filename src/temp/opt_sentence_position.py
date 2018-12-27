@@ -13,20 +13,21 @@ def cmd():
 
 @cmd.command()
 def verificate_opt_sentence_position():
-    total = len(corpus_accessor.exist_ncodes)
+    total_ncodes = len(corpus_accessor.exist_ncodes)
+    result = np.zeros(10, dtype=int)
     for i, ncode in enumerate(corpus_accessor.exist_ncodes):
         if i % 100 == 0:
-            print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
+            print('[INFO] PROGRESS: {:.1f}'.format(i/total_ncodes*100))
         contents_lines = corpus_accessor.get_contents_lines(ncode)
-        data = opt_sentences_data_supplier.load(ncode)['opt_sentence_index']
+        positions = opt_sentences_data_supplier.load(ncode)['opt_sentence_index'] / len(contents_lines)
+        rounded_positions = [round(value, 1) for value in positions]
+        bins = np.arange(0, 1.1, 0.1)
+        h, _ = np.histogram(rounded_positions, bins=bins)
+        result += h
 
-        print(len(contents_lines))
-        print(data)
-
-        print(round(data/len(contents_lines)), 1)
-
-
-        return
+        if i == 20:
+            break
+    print(result)
 
 
 def main():
