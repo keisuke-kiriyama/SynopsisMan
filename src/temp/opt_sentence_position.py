@@ -29,10 +29,6 @@ def verificate_opt_sentence_position(genre):
         bins = np.arange(0, 1.1, 0.1)
         h, _ = np.histogram(rounded_positions, bins=bins)
         result += h
-
-        if i == 5:
-            break
-
     print(result / sum(result))
 
 
