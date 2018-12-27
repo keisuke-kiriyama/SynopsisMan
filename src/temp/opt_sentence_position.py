@@ -30,8 +30,6 @@ def verificate_opt_sentence_position(genre):
         h, _ = np.histogram(rounded_positions, bins=bins)
         result += h
 
-        if i == 10:
-            break
     print(result / sum(result))
     file_path = genre + '.txt'
     with open(file_path, 'w') as f:
