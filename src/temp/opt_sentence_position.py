@@ -29,7 +29,14 @@ def verificate_opt_sentence_position(genre):
         bins = np.arange(0, 1.1, 0.1)
         h, _ = np.histogram(rounded_positions, bins=bins)
         result += h
+
+        if i == 10:
+            break
     print(result / sum(result))
+    file_path = genre + '.txt'
+    with open(file_path, 'w') as f:
+        f.write(result / sum(result))
+
 
 
 def main():
