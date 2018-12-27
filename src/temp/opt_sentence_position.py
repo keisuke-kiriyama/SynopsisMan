@@ -23,7 +23,7 @@ def verificate_opt_sentence_position():
         print(len(contents_lines))
         print(data)
 
-        print(data/len(contents_lines))
+        print(round(data/len(contents_lines)), 1)
 
 
         return
