@@ -12,8 +12,15 @@ def cmd():
 
 
 @cmd.command()
-def test():
-    print('test')
+def verificate_opt_sentence_position():
+    total = len(corpus_accessor.exist_ncodes)
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
+        if i % 100 == 0:
+            print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
+        data = opt_sentences_data_supplier.load(ncode)
+
+        print(data)
+        return
 
 
 def main():
