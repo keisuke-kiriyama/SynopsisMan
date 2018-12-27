@@ -27,7 +27,7 @@ def verificate_opt_sentence_position():
 
         if i == 20:
             break
-    print(result)
+    print(result / sum(result))
 
 
 def main():
