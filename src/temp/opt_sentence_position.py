@@ -18,10 +18,14 @@ def verificate_opt_sentence_position():
         if i % 100 == 0:
             print('[INFO] PROGRESS: {:.1f}'.format(i/total*100))
         contents_lines = corpus_accessor.get_contents_lines(ncode)
-        data = opt_sentences_data_supplier.load(ncode)
+        data = opt_sentences_data_supplier.load(ncode)['opt_sentence_index']
 
         print(len(contents_lines))
         print(data)
+
+        print(data/len(contents_lines))
+
+
         return
 
 
