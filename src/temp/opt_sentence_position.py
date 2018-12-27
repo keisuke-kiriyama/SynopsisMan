@@ -35,7 +35,7 @@ def verificate_opt_sentence_position(genre):
     print(result / sum(result))
     file_path = genre + '.txt'
     with open(file_path, 'w') as f:
-        f.write(result / sum(result))
+        f.write(str(result / sum(result)))
 
 
 
