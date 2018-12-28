@@ -18,7 +18,7 @@ def verificate_opt_sentence_position(genre):
     ncodes = get_active_ncodes(genre)
     ncodes_count = len(ncodes)
     result = np.zeros(10, dtype=int)
-    for i, ncode in enumerate(corpus_accessor.exist_ncodes):
+    for i, ncode in enumerate(ncodes):
         if i % 100 == 0:
             print('[INFO] PROGRESS: {:.1f}'.format(i/ncodes_count*100))
         contents_lines = corpus_accessor.get_contents_lines(ncode)
@@ -29,6 +29,9 @@ def verificate_opt_sentence_position(genre):
         bins = np.arange(0, 1.1, 0.1)
         h, _ = np.histogram(rounded_positions, bins=bins)
         result += h
+
+        if i == 5:
+            break
 
     print(result / sum(result))
     file_path = genre + '.txt'
