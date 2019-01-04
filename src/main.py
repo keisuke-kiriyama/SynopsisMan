@@ -298,7 +298,7 @@ def generate(genre,
                                   use_data_of_sentence_length=sentence_length)
     s.set_supplier(supplier)
     s.set_trained_model()
-    s.generate(ncode=ncode)
+    print(s.generate(ncode=ncode))
 
 def main():
 
