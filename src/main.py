@@ -274,8 +274,31 @@ def evaluate_rouge_score(genre,
                               use_data_of_is_include_person=person,
                               use_data_of_sentence_length=sentence_length)
 
-
-
+@cmd.command()
+@click.option('--genre', '-g', default='general')
+@click.option('--importance', '-i', default='cos_sim')
+@click.option('--ncode', '-n', default='')
+@click.option('--position', is_flag=True)
+@click.option('--serif', is_flag=True)
+@click.option('--person', is_flag=True)
+@click.option('--sentence_length', is_flag=True)
+def generate(genre,
+             importance,
+             ncode,
+             position=False,
+             serif=False,
+             person=False,
+             sentence_length=False):
+    s = LSTMSummarizer()
+    supplier = LSTMVectorSupplier(genre,
+                                  importance,
+                                  use_data_of_position_of_sentence=position,
+                                  use_data_of_is_serif=serif,
+                                  use_data_of_is_include_person=person,
+                                  use_data_of_sentence_length=sentence_length)
+    s.set_supplier(supplier)
+    s.set_trained_model()
+    s.generate(ncode=ncode)
 
 def main():
 
