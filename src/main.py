@@ -4,6 +4,7 @@ import os
 import re
 
 from util import paths
+from util.corpus_accessor import CorpusAccessor
 import preprocess as p
 from embedding.word_embedding import create_path_line_sentences_files, train_word_embedding_model, test_word_embedding_model
 import data_construction
@@ -275,20 +276,23 @@ def evaluate_rouge_score(genre,
                               use_data_of_sentence_length=sentence_length)
 
 @cmd.command()
-@click.option('--genre', '-g', default='general')
 @click.option('--importance', '-i', default='cos_sim')
 @click.option('--ncode', '-n', default='')
 @click.option('--position', is_flag=True)
 @click.option('--serif', is_flag=True)
 @click.option('--person', is_flag=True)
 @click.option('--sentence_length', is_flag=True)
-def generate(genre,
-             importance,
+def generate(importance,
              ncode,
              position=False,
              serif=False,
              person=False,
              sentence_length=False):
+    corpus_accessor = CorpusAccessor()
+    genre = corpus_accessor.get_genre(ncode)
+    if len(genre) == 0:
+        print('non genre')
+        return
     s = LSTMSummarizer()
     supplier = LSTMVectorSupplier(genre,
                                   importance,

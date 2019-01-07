@@ -82,6 +82,29 @@ class CorpusAccessor:
             return
         return self.load(meta_file_path)['story']
 
+    def get_genre(self, ncode):
+        """
+        ncodeから小説のジャンルを返す
+        :param ncode: str
+        :return: str
+        """
+        meta_file_path = self.create_meta_file_path(ncode=ncode)
+        if not meta_file_path in self.meta_file_paths:
+            print('nothing ncode')
+            return
+        genre_num = self.load(meta_file_path)['biggenre']
+        if genre_num == 1:
+            return 'love_story'
+        elif genre_num == 2:
+            return 'fantasy'
+        elif genre_num == 3:
+            return 'literature'
+        elif genre_num == 4:
+            return 'sf'
+        else:
+            return ''
+
+
     def get_wakati_contents_lines(self, ncode):
         """
         本文の各文を分かち書きしたリストを取得
@@ -115,8 +138,6 @@ class CorpusAccessor:
         file_path = self.create_meta_file_path(ncode)
         data = self.load(file_path)
         return data['end'] == 0
-
-
 
     def get_exist_ncodes(self):
         """
