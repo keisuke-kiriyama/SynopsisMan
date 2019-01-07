@@ -313,7 +313,7 @@ def multi_generate(importance, start, end):
     s = LSTMSummarizer()
     output_file_path = 'result_start_' + str(start) + '_end_' + str(end) + '.txt'
     file = open(output_file_path, 'w')
-    for i, ncode in corpus_accessor.exist_ncodes[start:end]:
+    for i, ncode in enumerate(corpus_accessor.exist_ncodes[start:end]):
         print('processed ncode count: ', i)
 
         genre = corpus_accessor.get_genre(ncode)
