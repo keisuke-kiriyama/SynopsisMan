@@ -310,9 +310,50 @@ def generate(importance,
 @click.option('--end', '-e', default=30)
 def multi_generate(importance, start, end):
     corpus_accessor = CorpusAccessor()
-    s = LSTMSummarizer()
     output_file_path = 'result_start_' + str(start) + '_end_' + str(end) + '.txt'
     file = open(output_file_path, 'w')
+
+
+    love_story_s = LSTMSummarizer()
+    love_story_supplier = LSTMVectorSupplier('love_story',
+                                  importance,
+                                  use_data_of_position_of_sentence=True,
+                                  use_data_of_is_serif=True,
+                                  use_data_of_is_include_person=True,
+                                  use_data_of_sentence_length=True)
+    love_story_s.set_supplier(love_story_supplier)
+    love_story_s.set_trained_model()
+
+    fantasy_s = LSTMSummarizer()
+    fantasy_supplier = LSTMVectorSupplier('fantasy',
+                                  importance,
+                                  use_data_of_position_of_sentence=True,
+                                  use_data_of_is_serif=True,
+                                  use_data_of_is_include_person=True,
+                                  use_data_of_sentence_length=True)
+    fantasy_s.set_supplier(fantasy_supplier)
+    fantasy_s.set_trained_model()
+
+    literature_s = LSTMSummarizer()
+    literature_supplier = LSTMVectorSupplier('literature',
+                                  importance,
+                                  use_data_of_position_of_sentence=True,
+                                  use_data_of_is_serif=True,
+                                  use_data_of_is_include_person=True,
+                                  use_data_of_sentence_length=True)
+    literature_s.set_supplier(literature_supplier)
+    literature_s.set_trained_model()
+
+    sf_s = LSTMSummarizer()
+    sf_supplier = LSTMVectorSupplier('sf',
+                                  importance,
+                                  use_data_of_position_of_sentence=True,
+                                  use_data_of_is_serif=True,
+                                  use_data_of_is_include_person=True,
+                                  use_data_of_sentence_length=True)
+    sf_s.set_supplier(sf_supplier)
+    sf_s.set_trained_model()
+
     for i, ncode in enumerate(corpus_accessor.exist_ncodes[start:end]):
         print('processed ncode count: ', i)
 
@@ -321,20 +362,21 @@ def multi_generate(importance, start, end):
             print('non genre')
             continue
         ref = ''.join(corpus_accessor.get_synopsis_lines(ncode))
-        supplier = LSTMVectorSupplier(genre,
-                                      importance,
-                                      use_data_of_position_of_sentence=True,
-                                      use_data_of_is_serif=True,
-                                      use_data_of_is_include_person=True,
-                                      use_data_of_sentence_length=True)
-        s.set_supplier(supplier)
-        s.set_trained_model()
-        synopsis = s.generate(ncode=ncode)
 
-        file.write(ncode)
-        file.write(genre)
-        file.write(ref + '\n')
-        file.write(synopsis + '\n\n')
+        synopsis = ''
+        if genre == 'love_story':
+            synopsis = love_story_s.generate(ncode)
+        elif genre == 'fantasy':
+            synopsis = fantasy_s.generate(ncode)
+        elif genre == 'literature':
+            synopsis = literature_s.generate(ncode)
+        elif genre == 'sf':
+            synopsis = sf_s.generate(ncode)
+
+        file.write(ncode + '\n')
+        file.write(genre + '\n')
+        file.write(ref + '\n\n')
+        file.write(synopsis + '\n\n\n')
     file.close()
 
 
