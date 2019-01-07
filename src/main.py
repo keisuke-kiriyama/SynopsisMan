@@ -304,6 +304,42 @@ def generate(importance,
     s.set_trained_model()
     print(s.generate(ncode=ncode))
 
+@cmd.command()
+@click.option('--importance', '-i', default='cos_sim')
+@click.option('--start', '-s', default=0)
+@click.option('--end', '-e', default=30)
+def multi_generate(importance, start, end):
+    corpus_accessor = CorpusAccessor()
+    s = LSTMSummarizer()
+    output_file_path = 'result_start_' + str(start) + '_end_' + str(end) + '.txt'
+    file = open(output_file_path, 'w')
+    for i, ncode in corpus_accessor.exist_ncodes[start:end]:
+        print('processed ncode count: ', i)
+
+        genre = corpus_accessor.get_genre(ncode)
+        if len(genre) == 0:
+            print('non genre')
+            continue
+        ref = ''.join(corpus_accessor.get_synopsis_lines(ncode))
+        supplier = LSTMVectorSupplier(genre,
+                                      importance,
+                                      use_data_of_position_of_sentence=True,
+                                      use_data_of_is_serif=True,
+                                      use_data_of_is_include_person=True,
+                                      use_data_of_sentence_length=True)
+        s.set_supplier(supplier)
+        s.set_trained_model()
+        synopsis = s.generate(ncode=ncode)
+
+        file.write(ncode)
+        file.write(genre)
+        file.write(ref + '\n')
+        file.write(synopsis + '\n\n')
+    file.close()
+
+
+
+
 def main():
 
     start = time.time()
