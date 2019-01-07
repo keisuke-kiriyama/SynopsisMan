@@ -2,6 +2,7 @@ import click
 import time
 import os
 import re
+import sys
 
 from util import paths
 from util.corpus_accessor import CorpusAccessor
@@ -13,6 +14,8 @@ from summarizer.dnn_summarizer import DNNSummarizer
 from data_supplier.lstm_vector_supplier import LSTMVectorSupplier
 from data_supplier.dnn_vector_supplier import DNNVectorSupplier
 from evaluate import rouge_evaluation
+from rouge import Rouge
+from util.text_processor import wakati
 
 @click.group()
 def cmd():
@@ -354,6 +357,9 @@ def multi_generate(importance, start, end):
     sf_s.set_supplier(sf_supplier)
     sf_s.set_trained_model()
 
+    sys.setrecursionlimit(20000)
+    rouge = Rouge()
+
     for i, ncode in enumerate(corpus_accessor.exist_ncodes[start:end]):
         print('processed ncode count: ', i)
 
@@ -373,8 +379,12 @@ def multi_generate(importance, start, end):
         elif genre == 'sf':
             synopsis = sf_s.generate(ncode)
 
+        score = rouge.get_scores(wakati(synopsis), wakati(ref), False)[0]['rouge-1']['r']
+
+
         file.write(ncode + '\n')
         file.write(genre + '\n')
+        file.write('score: ' + str(score) + '\n')
         file.write(ref + '\n\n')
         file.write(synopsis + '\n\n\n')
     file.close()
