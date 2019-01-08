@@ -381,7 +381,6 @@ def multi_generate(importance, start, end):
 
         score = rouge.get_scores(wakati(synopsis), wakati(ref), False)[0]['rouge-1']['r']
 
-
         file.write(ncode + '\n')
         file.write(genre + '\n')
         file.write('score: ' + str(score) + '\n')
@@ -389,16 +388,8 @@ def multi_generate(importance, start, end):
         file.write(synopsis + '\n\n\n')
     file.close()
 
-
-
-
 def main():
-
-    start = time.time()
     cmd()
-
-    elapsed_time = time.time() - start
-    print("elapsed_time:{:3f}".format(elapsed_time) + "[sec]")
 
 if __name__ == '__main__':
     main()
