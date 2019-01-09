@@ -312,6 +312,9 @@ def generate(importance,
 @click.option('--start', '-s', default=0)
 @click.option('--end', '-e', default=30)
 def multi_generate(importance, start, end):
+    """
+    複数作品まとめて確認したいとき
+    """
     corpus_accessor = CorpusAccessor()
     output_file_path = 'result_start_' + str(start) + '_end_' + str(end) + '.txt'
     file = open(output_file_path, 'w')
