@@ -360,7 +360,7 @@ def multi_generate(importance, start, end):
     sf_s.set_supplier(sf_supplier)
     sf_s.set_trained_model()
 
-    sys.setrecursionlimit(20000)
+    # sys.setrecursionlimit(20000)
     rouge = Rouge()
 
     for i, ncode in enumerate(corpus_accessor.exist_ncodes[start:end]):
